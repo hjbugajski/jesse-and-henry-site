@@ -1,0 +1,52 @@
+:root {
+  // Gold variables
+  --gold1: hsl(50deg 20% 99.1%);
+  --gold2: hsl(47deg 52.9% 96.7%);
+  --gold3: hsl(46deg 38.2% 93.7%);
+  --gold4: hsl(44deg 32.7% 90.1%);
+  --gold5: hsl(43deg 29.9% 85.7%);
+  --gold6: hsl(41deg 28.3% 79.8%);
+  --gold7: hsl(39deg 27.6% 71.9%);
+  --gold8: hsl(36deg 27.2% 61.8%);
+  --gold9: hsl(36deg 20% 49.5%);
+  --gold10: hsl(36deg 19.8% 45.7%);
+  --gold11: hsl(36deg 20% 39%);
+  --gold12: hsl(36deg 16% 20%);
+
+  // Color variables
+  --color-background: hsl(0deg 0% 97.5%);
+  --color-foreground: hsl(0deg 0% 5%);
+  --color-foreground-low-contrast: hsl(0deg 0% 25%);
+  --color-foreground-subtle: hsl(0deg 0% 45%);
+  --color-backdrop: hsla(0deg 0% 97.5% / 60%);
+
+  // Font variables
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Color variables
+    --color-background: hsl(0deg 0% 5%);
+    --color-foreground: hsl(0deg 0% 97.5%);
+    --color-foreground-low-contrast: hsl(0deg 0% 75%);
+    --color-foreground-subtle: hsl(0deg 0% 65%);
+    --color-backdrop: hsla(0deg 0% 5% / 60%);
+
+    // Gold variables
+    --gold1: hsl(44deg 9% 8.3%);
+    --gold2: hsl(43deg 14.3% 9.6%);
+    --gold3: hsl(42deg 15.5% 13%);
+    --gold4: hsl(41deg 16.4% 15.6%);
+    --gold5: hsl(41deg 16.9% 17.8%);
+    --gold6: hsl(40deg 17.6% 20.8%);
+    --gold7: hsl(38deg 18.5% 26.4%);
+    --gold8: hsl(36deg 19.6% 35.1%);
+    --gold9: hsl(36deg 20% 49.5%);
+    --gold10: hsl(36deg 22.3% 54.5%);
+    --gold11: hsl(35deg 30% 64%);
+    --gold12: hsl(49deg 52% 93.8%);
+  }
+}
