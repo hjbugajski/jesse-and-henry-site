@@ -1,22 +1,42 @@
 {
   "name": "jesse-and-henry-site",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "prepare": "husky install",
+    "lint": "next lint; npm run stylelint",
+    "stylelint": "stylelint '**/*.scss' --ignore-path .gitignore",
+    "prettier": "prettier --write . --ignore-unknown --ignore-path .gitignore"
   },
   "dependencies": {
-    "@types/node": "18.15.11",
-    "@types/react": "18.0.33",
-    "@types/react-dom": "18.0.11",
-    "eslint": "8.37.0",
-    "eslint-config-next": "13.2.4",
-    "next": "13.2.4",
+    "graphql": "^16.6.0",
+    "next": "13.3.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "5.0.3"
+    "slate": "^0.94.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
+    "@types/node": "18.16.3",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.1",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "8.39.0",
+    "eslint-config-next": "13.3.4",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8",
+    "sass": "^1.62.1",
+    "stylelint": "^15.6.0",
+    "stylelint-config-clean-order": "^5.0.1",
+    "stylelint-config-standard-scss": "^9.0.0",
+    "typescript": "5.0.4"
   }
 }

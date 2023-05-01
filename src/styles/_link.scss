@@ -1,0 +1,39 @@
+.link {
+  width: fit-content;
+
+  font-size: 0.875rem;
+  color: var(--color-foreground-low-contrast);
+  text-decoration: none;
+  text-transform: uppercase;
+
+  transition: color 225ms ease-in-out;
+
+  &:hover {
+    color: var(--gold11);
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  &--outline {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.25rem 0.5rem;
+
+    border-color: var(--color-foreground-low-contrast);
+    border-style: solid;
+    border-width: 0.1rem;
+
+    transition: border-color 225ms ease-in-out, color 225ms ease-in-out;
+
+    &:hover {
+      color: var(--gold11);
+      border-color: var(--gold11);
+    }
+  }
+}

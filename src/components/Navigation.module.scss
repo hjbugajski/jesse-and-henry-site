@@ -1,0 +1,29 @@
+.nav {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+
+  width: 100%;
+  min-height: 4rem;
+  max-height: 4rem;
+  padding: 0 1rem;
+
+  font-weight: var(--font-weight-regular);
+
+  background-color: var(--color-backdrop);
+  backdrop-filter: saturate(180%) blur(8px);
+
+  transition-property: background-color, backdrop-filter, -webkit-backdrop-filter;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25rem;
+}
