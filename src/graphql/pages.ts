@@ -1,4 +1,4 @@
-import { HERO } from './blocks';
+import { CONTENT, HERO, SECTION } from './blocks';
 
 export const PAGE = `
   query Page($slug: String) {
@@ -12,7 +12,9 @@ export const PAGE = `
         }
         content {
           layout {
+            ${CONTENT}
             ${HERO}
+            ${SECTION}
           }
         }
       }

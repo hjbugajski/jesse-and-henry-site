@@ -1,21 +1,28 @@
 import Link, { LinkProps } from 'next/link';
 
-import { classes } from '@/utils/classes';
+import { Color } from '@/types/color';
+import { classes, focusColorClass, textColorClass, textColorHoverClass } from '@/utils/classes';
 
 export type AppLinkProps = LinkProps & {
   children: React.ReactNode;
   className?: string;
+  color?: Color;
+  rel?: string;
+  target?: string;
 };
 
 export default function AppLink(props: AppLinkProps) {
-  const { className, children } = props;
+  const { className, children, color = 'neutral', ...rest } = props;
 
   return (
     <Link
-      {...props}
+      {...rest}
       className={classes(
         className,
-        'flex flex-row items-center gap-2 rounded transition-all hover:text-primary-40 focus:outline-none focus:ring-2 focus:ring-primary-40/50 focus:ring-opacity-75',
+        textColorClass[color],
+        textColorHoverClass[color],
+        focusColorClass[color],
+        'inline-flex flex-row items-center gap-2 rounded-md transition-all focus:outline-none focus:ring-2',
       )}
     >
       {children}

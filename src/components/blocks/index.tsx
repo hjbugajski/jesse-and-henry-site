@@ -1,13 +1,20 @@
-import { PayloadHeroBlock } from '@/types/payload';
+import { PayloadContentBlock, PayloadHeroBlock, PayloadSectionBlock } from '@/types/payload';
 
-import Hero from './Hero';
+import ButtonLinkBlock from './ButtonLinkBlock';
+import ContentBlock from './ContentBlock';
+import HeroBlock from './HeroBlock';
+import SectionBlock from './SectionBlock';
 
 const blocks = {
-  hero: Hero,
+  buttonLink: ButtonLinkBlock,
+  content: ContentBlock,
+  hero: HeroBlock,
+  section: SectionBlock,
 };
 
-export function Blocks({ block }: { block: PayloadHeroBlock }) {
+export function Blocks({ block }: { block: PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock }) {
   const RenderBlock = blocks[block.blockType];
 
+  // @ts-expect-error block type is correct
   return RenderBlock ? <RenderBlock block={block} /> : null;
 }

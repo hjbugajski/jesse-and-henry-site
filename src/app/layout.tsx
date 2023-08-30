@@ -3,7 +3,9 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Alice, Lato } from 'next/font/google';
 
+import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
+import { fetchGlobals } from '@/graphql';
 import { classes } from '@/utils/classes';
 
 const alice = Alice({ weight: '400', subsets: ['latin'], variable: '--font-alice' });
@@ -38,14 +40,18 @@ export const metadata: Metadata = {
       { url: '/favicons/android-chrome-512x512.png', sizes: '512x512' },
     ],
   },
+  themeColor: '#fbfdf8',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { navMenu } = await fetchGlobals();
+
   return (
     <html lang="en">
       <body className={classes(alice.variable, lato.variable)}>
-        <Navigation />
-        {children}
+        <Navigation navMenu={navMenu} />
+        <main className="flex flex-1 flex-col md:mt-[4.75rem]">{children}</main>
+        <Footer />
       </body>
     </html>
   );
