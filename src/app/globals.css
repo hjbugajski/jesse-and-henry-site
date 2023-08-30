@@ -1,3 +1,5 @@
+@import url('material-symbols/rounded');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,12 +9,8 @@
     @apply font-sans font-normal tracking-wider;
   }
 
-  *::selection {
-    @apply bg-primary-90 text-primary-10;
-  }
-
   html {
-    @apply h-full bg-neutral-99 text-neutral-10;
+    @apply h-full !scroll-smooth bg-neutral-99 text-neutral-10/80 md:scroll-p-[4.25rem];
   }
 
   body {
@@ -25,6 +23,16 @@
   h4,
   h5,
   h6 {
-    @apply font-serif uppercase tracking-[0.5rem];
+    @apply font-serif uppercase tracking-wider antialiased;
+  }
+
+  .material-symbols-rounded {
+    font-size: 1rem;
+    font-variation-settings:
+      'FILL' 1,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 20;
+    color: inherit;
   }
 }
