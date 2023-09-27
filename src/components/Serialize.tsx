@@ -2,6 +2,8 @@ import { Fragment } from 'react';
 
 import { Text } from 'slate';
 
+import Venue from './Venue';
+
 interface Node {
   type: string;
   value?: {
@@ -56,31 +58,46 @@ export default function Serialize({ nodes }: SerializeProps) {
             );
           case 'h2':
             return (
-              <h2 key={i} className="mb-4 mt-7 text-2xl first:mt-0 last:mb-0">
+              <h2
+                key={i}
+                className="mb-4 mt-7 font-sans text-2xl font-bold normal-case tracking-wide first:mt-0 last:mb-0"
+              >
                 <Serialize nodes={node.children} />
               </h2>
             );
           case 'h3':
             return (
-              <h3 key={i} className="mb-3 mt-6 text-xl first:mt-0 last:mb-0">
+              <h3
+                key={i}
+                className="mb-3 mt-6 font-sans text-xl font-bold normal-case tracking-wider first:mt-0 last:mb-0"
+              >
                 <Serialize nodes={node.children} />
               </h3>
             );
           case 'h4':
             return (
-              <h4 key={i} className="mb-2 mt-5 text-lg first:mt-0 last:mb-0">
+              <h4
+                key={i}
+                className="mb-2 mt-5 font-sans text-base font-bold normal-case tracking-wider first:mt-0 last:mb-0"
+              >
                 <Serialize nodes={node.children} />
               </h4>
             );
           case 'h5':
             return (
-              <h5 key={i} className="mb-2 mt-5 text-base first:mt-0 last:mb-0">
+              <h5
+                key={i}
+                className="mb-2 mt-5 font-sans text-sm font-bold normal-case tracking-wider first:mt-0 last:mb-0"
+              >
                 <Serialize nodes={node.children} />
               </h5>
             );
           case 'h6':
             return (
-              <h6 key={i} className="mb-2 mt-5 text-sm first:mt-0 last:mb-0">
+              <h6
+                key={i}
+                className="mb-2 mt-5 font-sans text-xs font-bold normal-case tracking-wider first:mt-0 last:mb-0"
+              >
                 <Serialize nodes={node.children} />
               </h6>
             );
@@ -102,6 +119,8 @@ export default function Serialize({ nodes }: SerializeProps) {
                 <Serialize nodes={node.children} />
               </li>
             );
+          case 'venue':
+            return <Venue key={i} />;
           default:
             return (
               <p key={i} className="my-2 first:mt-0 last:mb-0">

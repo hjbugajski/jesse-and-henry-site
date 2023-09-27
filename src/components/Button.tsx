@@ -12,14 +12,26 @@ import {
 
 import { AppLinkProps } from './AppLink';
 
+export type AbstractButtonProps = (ButtonProps | ButtonLinkProps) & {
+  Component: React.ElementType;
+};
+
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: React.ReactNode;
+  className?: string;
+  color?: Color;
+  iconPosition?: 'left' | 'right' | 'none';
+  size?: 'sm' | 'md' | 'lg';
+};
+
 export type ButtonLinkProps = AppLinkProps & {
   color?: Color;
   iconPosition?: 'left' | 'right' | 'none';
   size?: 'sm' | 'md' | 'lg';
 };
 
-export function ButtonLink(props: ButtonLinkProps) {
-  const { children, className, color = 'neutral', iconPosition = 'none', size = 'sm', ...rest } = props;
+function AbstractButton(props: AbstractButtonProps) {
+  const { Component, children, className, color = 'neutral', iconPosition = 'none', size = 'sm', ...rest } = props;
   const iconClass = {
     left: {
       sm: 'pl-2 pr-3',
@@ -44,7 +56,7 @@ export function ButtonLink(props: ButtonLinkProps) {
   };
 
   return (
-    <Link
+    <Component
       {...rest}
       className={classes(
         className,
@@ -55,10 +67,25 @@ export function ButtonLink(props: ButtonLinkProps) {
         sizeClass[size],
         textColorClass[color],
         textColorHoverClass[color],
-        'flex flex-row items-center justify-center rounded-md border font-bold transition-all focus:outline-none focus:ring-2',
+        'flex flex-row items-center justify-center rounded-lg border-2 font-bold transition-all focus:outline-none focus:ring-2',
       )}
     >
       {children}
-    </Link>
+    </Component>
   );
 }
+
+export const Button = (props: ButtonProps) => {
+  return (
+    <AbstractButton
+      {...props}
+      Component="button"
+      className={classes(
+        props.className,
+        props.disabled ? 'cursor-not-allowed !border-neutral-80/80 !text-neutral-80/80' : '',
+      )}
+    />
+  );
+};
+
+export const ButtonLink = (props: ButtonLinkProps) => <AbstractButton Component={Link} {...props} />;

@@ -1,11 +1,51 @@
+export interface PayloadAlertBlock {
+  title: string;
+  alertIcon: string;
+  content: {
+    [k: string]: unknown;
+  }[];
+  alertColor: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
+  alertLink: {
+    type: 'reference' | 'external';
+    newTab?: boolean;
+    text: string;
+    reference:
+      | {
+          value: PayloadPage;
+          relationTo: 'pages';
+        }
+      | {
+          value: PayloadProtectedPage;
+          relationTo: 'protected-pages';
+        };
+    url: string;
+    icon?: string;
+  };
+  alertWidth?: 'full' | 'max';
+  id?: string;
+  blockName?: string;
+  blockType: 'alert';
+}
+
 export interface PayloadButtonLinkBlock {
-  text: string;
   icon?: string;
   color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
-  type: 'reference' | 'external';
-  newTab?: boolean;
-  reference: PayloadPage;
-  url: string;
+  link: {
+    type: 'reference' | 'external';
+    newTab?: boolean;
+    text: string;
+    reference:
+      | {
+          value: PayloadPage;
+          relationTo: 'pages';
+        }
+      | {
+          value: PayloadProtectedPage;
+          relationTo: 'protected-pages';
+        };
+    url: string;
+    icon?: string;
+  };
   id?: string;
   blockName?: string;
   blockType: 'buttonLink';
@@ -37,7 +77,7 @@ export interface PayloadSectionBlock {
     [k: string]: unknown;
   }[];
   border: 'none' | 'left' | 'right';
-  layout?: (PayloadContentBlock | PayloadButtonLinkBlock)[];
+  layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadButtonLinkBlock)[];
   blockName?: string;
   blockType: 'section';
 }
@@ -51,23 +91,64 @@ export interface PayloadPage {
     description: string;
   };
   content: {
-    layout?: (PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock)[];
+    layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock)[];
   };
   _status?: 'draft' | 'published';
   createdAt: string;
   updatedAt: string;
 }
 
+export interface PayloadProtectedPage {
+  id: string;
+  name: string;
+  meta: {
+    title: string;
+    description: string;
+  };
+  content: {
+    layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock)[];
+  };
+  slug?: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: 'draft' | 'published';
+}
+
 export interface PayloadNavMenu {
   id: string;
   links?: {
-    type: 'reference' | 'external';
-    newTab?: boolean;
-    text: string;
-    reference: PayloadPage;
-    url: string;
+    link: {
+      type: 'reference' | 'external';
+      newTab?: boolean;
+      text: string;
+      reference:
+        | {
+            value: PayloadPage;
+            relationTo: 'pages';
+          }
+        | {
+            value: PayloadProtectedPage;
+            relationTo: 'protected-pages';
+          };
+      url: string;
+      icon?: string;
+    };
     id?: string;
   }[];
   updatedAt?: string;
   createdAt?: string;
+}
+
+export interface PayloadApiMe {
+  user: {
+    id: string;
+    email: string;
+    _verified: boolean;
+    createdAt: string;
+    updatedAt: string;
+    _strategy: string;
+  };
+  collection: string;
+  token: string;
+  exp: number;
 }
