@@ -1,9 +1,7 @@
-import { PayloadSectionBlock } from '@/types/payload';
-import { classes } from '@/utils/classes';
-
-import Serialize from '../Serialize';
-
-import { Blocks } from '.';
+import { Blocks } from '@/components/blocks';
+import Serialize from '@/components/Serialize';
+import { PayloadSectionBlock } from '@/lib/types/payload';
+import { classes } from '@/lib/utils/classes';
 
 export default function SectionBlock({ block }: { block: PayloadSectionBlock }) {
   const { border, description, id, layout, title } = block;

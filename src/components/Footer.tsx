@@ -1,6 +1,6 @@
-import AppLink from './AppLink';
-import Countdown from './Countdown';
-import Icon from './Icon';
+import Countdown from '@/components/Countdown';
+import AppLink from '@/lib/components/AppLink';
+import Icon from '@/lib/components/Icon';
 
 export default function Footer() {
   return (

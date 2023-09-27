@@ -5,8 +5,8 @@ import { Alice, Lato } from 'next/font/google';
 
 import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
-import { fetchGlobals } from '@/graphql';
-import { classes } from '@/utils/classes';
+import { fetchGlobals } from '@/lib/graphql';
+import { classes } from '@/lib/utils/classes';
 
 const alice = Alice({ weight: '400', subsets: ['latin'], variable: '--font-alice' });
 const lato = Lato({ weight: ['400', '700'], subsets: ['latin'], variable: '--font-lato' });

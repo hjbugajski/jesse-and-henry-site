@@ -3,10 +3,10 @@
 import { config } from 'dotenv';
 import { revalidatePath } from 'next/cache';
 
-import { fetchLogin } from '@/rest';
-import { FormState } from '@/types/form';
-import { setToken } from '@/utils/cookies';
-import { PAYLOAD_PROTECTED_TOKEN, PROTECTED_EMAIL } from '@/utils/env';
+import { fetchLogin } from '@/lib/api';
+import { FormState } from '@/lib/types/form';
+import { setToken } from '@/lib/utils/cookies';
+import { PAYLOAD_PROTECTED_TOKEN, PROTECTED_EMAIL } from '@/lib/utils/env';
 
 config();
 

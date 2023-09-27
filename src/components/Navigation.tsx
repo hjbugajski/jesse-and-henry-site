@@ -5,10 +5,9 @@ import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useMediaQuery } from 'usehooks-ts';
 
-import { PayloadNavMenu } from '@/types/payload';
-
-import AppLink from './AppLink';
-import Icon from './Icon';
+import AppLink from '@/lib/components/AppLink';
+import Icon from '@/lib/components/Icon';
+import { PayloadNavMenu } from '@/lib/types/payload';
 
 function NavLinks({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
   return (

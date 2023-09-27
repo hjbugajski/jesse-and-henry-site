@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { Color } from '@/types/color';
+import { AppLinkProps } from '@/lib/components/AppLink';
+import { Color } from '@/lib/types/color';
 import {
   borderColorClass,
   borderColorHoverClass,
@@ -8,9 +9,7 @@ import {
   focusColorClass,
   textColorClass,
   textColorHoverClass,
-} from '@/utils/classes';
-
-import { AppLinkProps } from './AppLink';
+} from '@/lib/utils/classes';
 
 export type AbstractButtonProps = (ButtonProps | ButtonLinkProps) & {
   Component: React.ElementType;

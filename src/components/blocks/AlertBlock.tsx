@@ -1,9 +1,8 @@
-import { PayloadAlertBlock } from '@/types/payload';
-
-import * as Alert from '../Alert';
-import { ButtonLink } from '../Button';
-import Icon from '../Icon';
-import Serialize from '../Serialize';
+import Serialize from '@/components/Serialize';
+import * as Alert from '@/lib/components/Alert';
+import { ButtonLink } from '@/lib/components/Button';
+import Icon from '@/lib/components/Icon';
+import { PayloadAlertBlock } from '@/lib/types/payload';
 
 export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
   const { alertLink: link, alertColor: color, content, alertIcon: icon, title, alertWidth: width } = block;

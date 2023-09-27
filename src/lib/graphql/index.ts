@@ -1,9 +1,8 @@
-import { PayloadNavMenu, PayloadPage, PayloadProtectedPage } from '@/types/payload';
-import { getToken } from '@/utils/cookies';
-import { PAYLOAD_GRAPHQL, PAYLOAD_PROTECTED_TOKEN } from '@/utils/env';
-
-import { GLOBALS } from './gloabls';
-import { PAGE, PAGES, PROTECTED_PAGE, PROTECTED_PAGES } from './pages';
+import { GLOBALS } from '@/lib/graphql/gloabls';
+import { PAGE, PAGES, PROTECTED_PAGE, PROTECTED_PAGES } from '@/lib/graphql/pages';
+import { PayloadNavMenu, PayloadPage, PayloadProtectedPage } from '@/lib/types/payload';
+import { getToken } from '@/lib/utils/cookies';
+import { PAYLOAD_GRAPHQL, PAYLOAD_PROTECTED_TOKEN } from '@/lib/utils/env';
 
 const NEXT_CONFIG = {
   revalidate: 60,

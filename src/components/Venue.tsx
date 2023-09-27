@@ -1,4 +1,4 @@
-import AppLink from './AppLink';
+import AppLink from '@/lib/components/AppLink';
 
 export const IconBorgo = ({ className }: { className?: string }) => {
   return (

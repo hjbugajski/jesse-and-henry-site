@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 
 import { Text } from 'slate';
 
-import Venue from './Venue';
+import Venue from '@/components/Venue';
 
 interface Node {
   type: string;

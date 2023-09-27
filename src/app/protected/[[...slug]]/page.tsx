@@ -2,9 +2,9 @@ import { notFound } from 'next/navigation';
 
 import { Blocks } from '@/components/blocks';
 import ProtectedForm from '@/components/ProtectedForm';
-import { fetchProtectedPage, fetchProtectedPages } from '@/graphql';
-import { fetchGuest, fetchUser } from '@/rest';
-import { PayloadApiMe } from '@/types/payload';
+import { fetchGuest, fetchUser } from '@/lib/api';
+import { fetchProtectedPage, fetchProtectedPages } from '@/lib/graphql';
+import { PayloadApiMe } from '@/lib/types/payload';
 
 export async function generateStaticParams() {
   try {

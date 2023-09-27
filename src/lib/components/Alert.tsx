@@ -1,7 +1,6 @@
-import { Color } from '@/types/color';
-import { backgroundColorClass, classes, textColorClass } from '@/utils/classes';
-
-import Icon from './Icon';
+import Icon from '@/lib/components/Icon';
+import { Color } from '@/lib/types/color';
+import { backgroundColorClass, classes, textColorClass } from '@/lib/utils/classes';
 
 export type AlertProps = {
   children: React.ReactNode;

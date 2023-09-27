@@ -1,6 +1,6 @@
-import { PayloadApiMe } from '@/types/payload';
-import { getToken } from '@/utils/cookies';
-import { PAYLOAD_API, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN } from '@/utils/env';
+import { PayloadApiMe } from '@/lib/types/payload';
+import { getToken } from '@/lib/utils/cookies';
+import { PAYLOAD_API, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN } from '@/lib/utils/env';
 
 export async function fetchLogin(email: string, password: string) {
   return await fetch(`${PAYLOAD_API}/users/login`, {

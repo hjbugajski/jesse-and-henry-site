@@ -2,7 +2,7 @@
 
 import { experimental_useFormStatus as useFormStatus } from 'react-dom';
 
-import Spinner from './Spinner';
+import Spinner from '@/lib/components/Spinner';
 
 export default function SubmitButton({ text = 'Submit' }) {
   const { pending } = useFormStatus();

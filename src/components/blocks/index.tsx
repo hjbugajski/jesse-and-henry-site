@@ -1,10 +1,9 @@
-import { PayloadAlertBlock, PayloadContentBlock, PayloadHeroBlock, PayloadSectionBlock } from '@/types/payload';
-
-import AlertBlock from './AlertBlock';
-import ButtonLinkBlock from './ButtonLinkBlock';
-import ContentBlock from './ContentBlock';
-import HeroBlock from './HeroBlock';
-import SectionBlock from './SectionBlock';
+import AlertBlock from '@/components/blocks/AlertBlock';
+import ButtonLinkBlock from '@/components/blocks/ButtonLinkBlock';
+import ContentBlock from '@/components/blocks/ContentBlock';
+import HeroBlock from '@/components/blocks/HeroBlock';
+import SectionBlock from '@/components/blocks/SectionBlock';
+import { PayloadAlertBlock, PayloadContentBlock, PayloadHeroBlock, PayloadSectionBlock } from '@/lib/types/payload';
 
 const blocks = {
   alert: AlertBlock,

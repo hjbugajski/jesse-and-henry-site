@@ -4,10 +4,9 @@
 import { experimental_useFormState as useFormState } from 'react-dom';
 
 import { protectedLogin } from '@/app/actions';
-import { FormState } from '@/types/form';
-import { classes } from '@/utils/classes';
-
-import SubmitButton from './SubmitButton';
+import SubmitButton from '@/lib/components/SubmitButton';
+import { FormState } from '@/lib/types/form';
+import { classes } from '@/lib/utils/classes';
 
 const initialState: FormState = {
   status: null,

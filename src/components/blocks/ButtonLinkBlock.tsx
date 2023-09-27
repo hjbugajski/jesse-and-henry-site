@@ -1,7 +1,6 @@
-import { PayloadButtonLinkBlock } from '@/types/payload';
-
-import { ButtonLink } from '../Button';
-import Icon from '../Icon';
+import { ButtonLink } from '@/lib/components/Button';
+import Icon from '@/lib/components/Icon';
+import { PayloadButtonLinkBlock } from '@/lib/types/payload';
 
 export default function ButtonLinkBlock({ block }: { block: PayloadButtonLinkBlock }) {
   const { color, icon, link } = block;
