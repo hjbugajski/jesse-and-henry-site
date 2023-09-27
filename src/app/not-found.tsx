@@ -1,5 +1,5 @@
-import { ButtonLink } from '@/components/Button';
-import Icon from '@/components/Icon';
+import { ButtonLink } from '@/lib/components/Button';
+import Icon from '@/lib/components/Icon';
 
 export default function NotFound() {
   return (

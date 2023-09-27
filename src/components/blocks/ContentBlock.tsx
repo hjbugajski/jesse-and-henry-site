@@ -1,6 +1,5 @@
-import { PayloadContentBlock } from '@/types/payload';
-
-import Serialize from '../Serialize';
+import Serialize from '@/components/Serialize';
+import { PayloadContentBlock } from '@/lib/types/payload';
 
 export default function ContentBlock({ block }: { block: PayloadContentBlock }) {
   return (

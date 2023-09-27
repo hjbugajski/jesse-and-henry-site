@@ -14,12 +14,12 @@ export const backgroundColorClass = {
 };
 
 export const borderColorClass = {
-  neutral: 'border-neutral-10/80',
-  'neutral-variant': 'border-neutral-variant-30/80',
-  primary: 'border-primary-20/80',
-  secondary: 'border-secondary-20/80',
-  tertiary: 'border-tertiary-20/80',
-  danger: 'border-danger-20/80',
+  neutral: 'border-neutral-50/80',
+  'neutral-variant': 'border-neutral-variant-50/80',
+  primary: 'border-primary-50/80',
+  secondary: 'border-secondary-50/80',
+  tertiary: 'border-tertiary-50/80',
+  danger: 'border-danger-50/80',
 };
 
 export const borderColorHoverClass = {

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { Blocks } from '@/components/blocks';
-import { fetchPage, fetchPages } from '@/graphql';
+import { fetchPage, fetchPages } from '@/lib/graphql';
 
 export async function generateStaticParams() {
   try {

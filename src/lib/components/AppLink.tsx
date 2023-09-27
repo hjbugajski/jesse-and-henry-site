@@ -1,7 +1,7 @@
 import Link, { LinkProps } from 'next/link';
 
-import { Color } from '@/types/color';
-import { classes, focusColorClass, textColorClass, textColorHoverClass } from '@/utils/classes';
+import { Color } from '@/lib/types/color';
+import { classes, focusColorClass, textColorClass, textColorHoverClass } from '@/lib/utils/classes';
 
 export type AppLinkProps = LinkProps & {
   children: React.ReactNode;

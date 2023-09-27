@@ -1,4 +1,4 @@
-import { PayloadHeroBlock } from '@/types/payload';
+import { PayloadHeroBlock } from '@/lib/types/payload';
 
 export default function HeroBlock({ block: { titleOne, titleTwo, subtitle } }: { block: PayloadHeroBlock }) {
   return (
