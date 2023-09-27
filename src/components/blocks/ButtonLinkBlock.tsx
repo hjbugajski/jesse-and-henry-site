@@ -16,7 +16,7 @@ export default function ButtonLinkBlock({ block }: { block: PayloadButtonLinkBlo
       className="w-fit"
     >
       {link.text}
-      {icon && <Icon name={icon} className="text-2xl" />}
+      {icon && <Icon name={icon} />}
     </ButtonLink>
   );
 }

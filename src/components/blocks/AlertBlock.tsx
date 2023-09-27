@@ -25,22 +25,20 @@ export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
             size="sm"
           >
             {link.text}
-            {link.icon && <Icon name={link.icon} className="text-xl" />}
+            {link.icon && <Icon name={link.icon} />}
           </ButtonLink>
         </Alert.Actions>
       )}
     </Alert.Root>
   );
 
-  return (
-    <>
-      {width === 'max' ? (
-        <section className="mx-auto w-full max-w-4xl px-4 py-12 md:px-8">
-          <RenderAlert />
-        </section>
-      ) : (
+  if (width === 'max') {
+    return (
+      <section className="mx-auto w-full max-w-4xl px-4 py-12 md:px-8 md-lg:px-4">
         <RenderAlert />
-      )}
-    </>
-  );
+      </section>
+    );
+  }
+
+  return <RenderAlert />;
 }

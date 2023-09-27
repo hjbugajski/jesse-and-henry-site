@@ -122,6 +122,9 @@ const config: Config = {
       letterSpacing: {
         widest: '0.25rem',
       },
+      screens: {
+        'md-lg': '896px',
+      },
     },
   },
 };

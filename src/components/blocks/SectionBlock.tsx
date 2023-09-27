@@ -7,9 +7,9 @@ export default function SectionBlock({ block }: { block: PayloadSectionBlock }) 
   const { border, description, id, layout, title } = block;
 
   const variant = {
-    left: 'border-neutral-variant-50/50 border-t border-b md:border-l md:ml-4 pl-4 md:pl-0 pr-4 md:rounded-tl-3xl md:rounded-bl-3xl',
+    left: 'border-neutral-variant-50/50 border-t-2 border-b-2 md:border-l-2 md:ml-4 pl-4 md:pl-0 pr-4 md:rounded-tl-3xl md:rounded-bl-3xl',
     right:
-      'border-neutral-variant-50/50 border-t border-b md:border-r md:mr-4 pr-4 md:pr-0 pl-4 md:rounded-tr-3xl md:rounded-br-3xl',
+      'border-neutral-variant-50/50 border-t-2 border-b-2 md:border-r-2 md:mr-4 pr-4 md:pr-0 pl-4 md:rounded-tr-3xl md:rounded-br-3xl',
     none: 'px-4',
   };
 
