@@ -35,7 +35,7 @@ export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
   return (
     <>
       {width === 'max' ? (
-        <section className="mx-auto w-full max-w-4xl px-4 py-12">
+        <section className="mx-auto w-full max-w-4xl px-4 py-12 md:px-8">
           <RenderAlert />
         </section>
       ) : (
