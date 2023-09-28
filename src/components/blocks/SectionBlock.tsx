@@ -4,7 +4,7 @@ import { PayloadSectionBlock } from '@/lib/types/payload';
 import { classes } from '@/lib/utils/classes';
 
 export default function SectionBlock({ block }: { block: PayloadSectionBlock }) {
-  const { border, description, id, layout, title } = block;
+  const { anchorId, border, description, layout, title } = block;
 
   const variant = {
     left: 'border-neutral-variant-50/50 border-t-2 border-b-2 md:border-l-2 md:ml-4 pl-4 md:pl-0 pr-4 md:rounded-tl-3xl md:rounded-bl-3xl',
@@ -18,10 +18,10 @@ export default function SectionBlock({ block }: { block: PayloadSectionBlock }) 
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-9 py-12 md:px-4">
         <div>
           <a
-            href={`#${id}`}
+            href={`#${anchorId}`}
             className="block w-fit rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-40/50"
           >
-            <h1 id={id} className="mb-6 w-fit text-3xl tracking-wider">
+            <h1 id={anchorId} className="mb-6 w-fit text-3xl tracking-wider">
               {title}
             </h1>
           </a>

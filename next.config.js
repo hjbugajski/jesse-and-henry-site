@@ -10,6 +10,11 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/protected/guest-information',
+        destination: '/guest-information',
+        permanent: true,
+      },
     ];
   },
 };

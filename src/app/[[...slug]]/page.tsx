@@ -1,7 +1,10 @@
 import { notFound } from 'next/navigation';
 
 import { Blocks } from '@/components/blocks';
+import ProtectedForm from '@/components/ProtectedForm';
+import { fetchGuest, fetchUser } from '@/lib/api';
 import { fetchPage, fetchPages } from '@/lib/graphql';
+import { PayloadApiMe } from '@/lib/types/payload';
 
 export async function generateStaticParams() {
   try {
@@ -29,5 +32,27 @@ export default async function Page({ params: { slug } }: { params: { slug: strin
     notFound();
   }
 
-  return page.content.layout?.map((block, i) => <Blocks key={i} block={block} />);
+  if (page?.protected) {
+    let userAuth: PayloadApiMe | undefined;
+    let guestAuth: PayloadApiMe | undefined;
+
+    await Promise.all([fetchUser(), fetchGuest()]).then(([user, guest]) => {
+      userAuth = user;
+      guestAuth = guest;
+    });
+
+    if (!userAuth?.user && !guestAuth?.user) {
+      return (
+        <section className="mx-auto w-full max-w-sm px-4 py-12 text-center">
+          <h1 className="mb-4 text-3xl tracking-wider">Protected</h1>
+          <p className="mb-6 text-sm">
+            Enter the guest password found on the back of your save the date or invitation to view this page.
+          </p>
+          <ProtectedForm slug={slug} />
+        </section>
+      );
+    }
+  }
+
+  return page.content?.layout?.map((block, i) => <Blocks key={i} block={block} />);
 }

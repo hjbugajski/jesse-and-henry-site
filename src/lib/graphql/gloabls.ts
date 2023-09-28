@@ -6,15 +6,7 @@ export const GLOBALS = `#graphql
           text
           newTab
           reference {
-            relationTo
-            value {
-              ... on Page {
-                slug
-              }
-              ... on ProtectedPage {
-                slug
-              }
-            }
+            slug
           }
           type
           url

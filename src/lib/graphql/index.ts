@@ -1,8 +1,8 @@
 import { GLOBALS } from '@/lib/graphql/gloabls';
-import { PAGE, PAGES, PROTECTED_PAGE, PROTECTED_PAGES } from '@/lib/graphql/pages';
-import { PayloadNavMenu, PayloadPage, PayloadProtectedPage } from '@/lib/types/payload';
+import { PAGE, PAGES } from '@/lib/graphql/pages';
+import { PayloadNavMenu, PayloadPage } from '@/lib/types/payload';
 import { getToken } from '@/lib/utils/cookies';
-import { PAYLOAD_GRAPHQL, PAYLOAD_PROTECTED_TOKEN } from '@/lib/utils/env';
+import { PAYLOAD_GRAPHQL, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN } from '@/lib/utils/env';
 
 const NEXT_CONFIG = {
   revalidate: 60,
@@ -30,14 +30,19 @@ export const fetchGlobals = async (): Promise<{ navMenu: PayloadNavMenu | undefi
 };
 
 export const fetchPage = async (segments?: string[]): Promise<PayloadPage> => {
-  const slugSegments = segments || ['home'];
-  const slug = slugSegments[slugSegments.length - 1];
+  const slug = (segments || ['home']).join('/');
+  const token = getToken(PAYLOAD_PROTECTED_TOKEN) ?? getToken(PAYLOAD_GUEST_TOKEN);
+  let headers = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers = Object.assign(headers, { Authorization: `JWT ${token}` });
+  }
 
   const { data, error } = await fetch(PAYLOAD_GRAPHQL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     next: NEXT_CONFIG,
     body: JSON.stringify({
       query: PAGE,
@@ -75,54 +80,4 @@ export const fetchPages = async (): Promise<Array<{ slug: string }>> => {
   }
 
   return data.Pages.docs;
-};
-
-export const fetchProtectedPage = async (segments?: string[]): Promise<PayloadProtectedPage> => {
-  const slugSegments = segments || ['protected'];
-  const slug = 'protected/' + slugSegments[slugSegments.length - 1];
-
-  const { data, error } = await fetch(PAYLOAD_GRAPHQL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `JWT ${getToken(PAYLOAD_PROTECTED_TOKEN)}`,
-    },
-    next: NEXT_CONFIG,
-    body: JSON.stringify({
-      query: PROTECTED_PAGE,
-      variables: {
-        slug,
-      },
-    }),
-  }).then(async (res) => await res.json());
-
-  if (error) {
-    console.error(JSON.stringify(error));
-
-    throw new Error();
-  }
-
-  return data.ProtectedPages.docs[0];
-};
-
-export const fetchProtectedPages = async (): Promise<Array<{ slug: string }>> => {
-  const { data, error } = await fetch(PAYLOAD_GRAPHQL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `JWT ${getToken(PAYLOAD_PROTECTED_TOKEN)}`,
-    },
-    next: NEXT_CONFIG,
-    body: JSON.stringify({
-      query: PROTECTED_PAGES,
-    }),
-  }).then(async (res) => await res.json());
-
-  if (error) {
-    console.error(JSON.stringify(error));
-
-    throw new Error();
-  }
-
-  return data.ProtectedPages.docs;
 };

@@ -5,7 +5,7 @@ import Icon from '@/lib/components/Icon';
 import { PayloadAlertBlock } from '@/lib/types/payload';
 
 export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
-  const { alertLink: link, alertColor: color, content, alertIcon: icon, title, alertWidth: width } = block;
+  const { alertLink: link, alertColor: color, content, icon, title, alertWidth: width } = block;
 
   const RenderAlert = () => (
     <Alert.Root color={color} icon={icon}>
@@ -16,7 +16,7 @@ export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
       {link && (
         <Alert.Actions>
           <ButtonLink
-            href={link.type === 'external' ? link.url : `/${link.reference.value.slug}`}
+            href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
             target={link.newTab ? '_blank' : ''}
             rel={link.newTab ? 'noopener noreferrer' : ''}
             className="w-fit"

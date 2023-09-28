@@ -3,11 +3,11 @@ import Icon from '@/lib/components/Icon';
 import { PayloadButtonLinkBlock } from '@/lib/types/payload';
 
 export default function ButtonLinkBlock({ block }: { block: PayloadButtonLinkBlock }) {
-  const { color, icon, link } = block;
+  const { color, link } = block;
 
   return (
     <ButtonLink
-      href={link.type === 'external' ? link.url : `/${link.reference.value.slug}`}
+      href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
       target={link.newTab ? '_blank' : ''}
       rel={link.newTab ? 'noopener noreferrer' : ''}
       color={color}
@@ -16,7 +16,7 @@ export default function ButtonLinkBlock({ block }: { block: PayloadButtonLinkBlo
       className="w-fit"
     >
       {link.text}
-      {icon && <Icon name={icon} />}
+      {link.icon && <Icon name={link.icon} />}
     </ButtonLink>
   );
 }
