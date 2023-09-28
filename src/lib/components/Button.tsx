@@ -49,9 +49,9 @@ function AbstractButton(props: AbstractButtonProps) {
     },
   };
   const sizeClass = {
-    sm: 'h-7 text-xs gap-1',
-    md: 'h-9 text-sm gap-1',
-    lg: 'h-11 text-base gap-2',
+    sm: 'h-7 text-xs gap-1 [&>.material-symbols-rounded]:text-sm',
+    md: 'h-9 text-sm gap-1 [&>.material-symbols-rounded]:text-base',
+    lg: 'h-11 text-base gap-2 [&>.material-symbols-rounded]:text-lg',
   };
 
   return (
@@ -74,17 +74,15 @@ function AbstractButton(props: AbstractButtonProps) {
   );
 }
 
-export const Button = (props: ButtonProps) => {
-  return (
-    <AbstractButton
-      {...props}
-      Component="button"
-      className={classes(
-        props.className,
-        props.disabled ? 'cursor-not-allowed !border-neutral-80/80 !text-neutral-80/80' : '',
-      )}
-    />
-  );
-};
+export const Button = (props: ButtonProps) => (
+  <AbstractButton
+    {...props}
+    Component="button"
+    className={classes(
+      props.className,
+      props.disabled ? 'cursor-not-allowed !border-neutral-80/80 !text-neutral-80/80' : '',
+    )}
+  />
+);
 
 export const ButtonLink = (props: ButtonLinkProps) => <AbstractButton Component={Link} {...props} />;

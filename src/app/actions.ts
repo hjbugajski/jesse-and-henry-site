@@ -24,7 +24,7 @@ export async function protectedLogin(prevState: any, formData: FormData): Promis
 
     if (res.ok) {
       setToken(PAYLOAD_PROTECTED_TOKEN, data.token);
-      revalidatePath(`/protected/${slug}`);
+      revalidatePath(`/${slug}`);
     } else {
       console.error(JSON.stringify(data));
 

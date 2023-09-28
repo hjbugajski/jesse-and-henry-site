@@ -3,6 +3,20 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  redirects: async () => {
+    return [
+      {
+        source: '/protected',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/protected/guest-information',
+        destination: '/guest-information',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

@@ -15,7 +15,7 @@ function NavLinks({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
       {navMenu?.links?.map(({ link }, i) => (
         <li key={i}>
           <AppLink
-            href={link.type === 'external' ? link.url : `/${link.reference.value.slug}`}
+            href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
             target={link.newTab ? '_blank' : undefined}
             rel={link.type === 'external' ? 'noopener noreferrer' : undefined}
             className="h-6 px-2 text-sm"
@@ -43,7 +43,7 @@ function MobileMenu({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
                 <li key={i} className="w-full">
                   <Dialog.Close asChild>
                     <AppLink
-                      href={link.type === 'external' ? link.url : `/${link.reference.value.slug}`}
+                      href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
                       target={link.newTab ? '_blank' : undefined}
                       rel={link.type === 'external' ? 'noopener noreferrer' : undefined}
                       className="w-full justify-center px-4 py-2 text-lg"

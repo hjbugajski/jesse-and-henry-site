@@ -10,7 +10,7 @@ export default function NotFound() {
       </div>
       <ButtonLink href="/" iconPosition="right" size="md">
         Home
-        <Icon name="arrow_right_alt" className="text-2xl" />
+        <Icon name="arrow_forward" />
       </ButtonLink>
     </section>
   );

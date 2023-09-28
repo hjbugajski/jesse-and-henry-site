@@ -19,7 +19,7 @@ function Alert({ children, className, color = 'neutral', icon }: AlertProps) {
         'flex flex-row gap-4 rounded-xl p-4 text-left text-sm',
       )}
     >
-      <Icon name={icon} className={classes(textColorClass[color], 'text-2xl leading-[1.15]')} />
+      <Icon name={icon} className={classes(textColorClass[color], 'text-xl leading-6')} />
       <div>{children}</div>
     </div>
   );

@@ -5,7 +5,7 @@ import Icon from '@/lib/components/Icon';
 import { PayloadAlertBlock } from '@/lib/types/payload';
 
 export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
-  const { alertLink: link, alertColor: color, content, alertIcon: icon, title, alertWidth: width } = block;
+  const { alertLink: link, alertColor: color, content, icon, title, alertWidth: width } = block;
 
   const RenderAlert = () => (
     <Alert.Root color={color} icon={icon}>
@@ -16,7 +16,7 @@ export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
       {link && (
         <Alert.Actions>
           <ButtonLink
-            href={link.type === 'external' ? link.url : `/${link.reference.value.slug}`}
+            href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
             target={link.newTab ? '_blank' : ''}
             rel={link.newTab ? 'noopener noreferrer' : ''}
             className="w-fit"
@@ -25,22 +25,20 @@ export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
             size="sm"
           >
             {link.text}
-            {link.icon && <Icon name={link.icon} className="text-xl" />}
+            {link.icon && <Icon name={link.icon} />}
           </ButtonLink>
         </Alert.Actions>
       )}
     </Alert.Root>
   );
 
-  return (
-    <>
-      {width === 'max' ? (
-        <section className="mx-auto w-full max-w-4xl px-4 py-12 md:px-8">
-          <RenderAlert />
-        </section>
-      ) : (
+  if (width === 'max') {
+    return (
+      <section className="mx-auto w-full max-w-4xl px-4 py-12 md:px-8 md-lg:px-4">
         <RenderAlert />
-      )}
-    </>
-  );
+      </section>
+    );
+  }
+
+  return <RenderAlert />;
 }

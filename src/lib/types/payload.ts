@@ -1,23 +1,16 @@
 export interface PayloadAlertBlock {
   title: string;
-  alertIcon: string;
+  icon: string;
   content: {
     [k: string]: unknown;
   }[];
   alertColor: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
-  alertLink: {
+  action?: boolean;
+  alertLink?: {
     type: 'reference' | 'external';
     newTab?: boolean;
     text: string;
-    reference:
-      | {
-          value: PayloadPage;
-          relationTo: 'pages';
-        }
-      | {
-          value: PayloadProtectedPage;
-          relationTo: 'protected-pages';
-        };
+    reference: PayloadPage;
     url: string;
     icon?: string;
   };
@@ -28,21 +21,12 @@ export interface PayloadAlertBlock {
 }
 
 export interface PayloadButtonLinkBlock {
-  icon?: string;
   color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
   link: {
     type: 'reference' | 'external';
     newTab?: boolean;
     text: string;
-    reference:
-      | {
-          value: PayloadPage;
-          relationTo: 'pages';
-        }
-      | {
-          value: PayloadProtectedPage;
-          relationTo: 'protected-pages';
-        };
+    reference: PayloadPage;
     url: string;
     icon?: string;
   };
@@ -71,21 +55,23 @@ export interface PayloadHeroBlock {
 }
 
 export interface PayloadSectionBlock {
-  id: string;
+  anchorId: string;
   title: string;
   description?: {
     [k: string]: unknown;
   }[];
   border: 'none' | 'left' | 'right';
   layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadButtonLinkBlock)[];
+  id?: string;
   blockName?: string;
   blockType: 'section';
 }
 
 export interface PayloadPage {
   id: string;
-  name: string;
   slug?: string;
+  protected?: boolean;
+  name: string;
   meta: {
     title: string;
     description: string;
@@ -96,22 +82,6 @@ export interface PayloadPage {
   _status?: 'draft' | 'published';
   createdAt: string;
   updatedAt: string;
-}
-
-export interface PayloadProtectedPage {
-  id: string;
-  name: string;
-  meta: {
-    title: string;
-    description: string;
-  };
-  content: {
-    layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock)[];
-  };
-  slug?: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: 'draft' | 'published';
 }
 
 export interface PayloadNavMenu {
@@ -121,15 +91,7 @@ export interface PayloadNavMenu {
       type: 'reference' | 'external';
       newTab?: boolean;
       text: string;
-      reference:
-        | {
-            value: PayloadPage;
-            relationTo: 'pages';
-          }
-        | {
-            value: PayloadProtectedPage;
-            relationTo: 'protected-pages';
-          };
+      reference: PayloadPage;
       url: string;
       icon?: string;
     };

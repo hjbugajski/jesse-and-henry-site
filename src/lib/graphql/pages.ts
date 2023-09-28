@@ -1,9 +1,9 @@
 export const PAGE = `#graphql
   query Page($slug: String) {
-    Pages(where: { slug: { equals: $slug}, _status: { equals: published } }) {
+    Pages(where: { slug: { equals: $slug }, _status: { equals: published } }) {
       docs {
         slug
-        name
+        protected
         meta {
           title
           description
@@ -20,14 +20,8 @@ export const PAGE = `#graphql
                 newTab
                 icon
                 reference {
-                  relationTo
-                  value {
-                    ... on Page {
-                      slug
-                    }
-                    ... on ProtectedPage {
-                      slug
-                    }
+                  ... on Page {
+                    slug
                   }
                 }
                 type
@@ -41,36 +35,31 @@ export const PAGE = `#graphql
               content
               width
             }
-            ...on Hero {
+            ... on Hero {
               titleOne
               titleTwo
               subtitle
               blockType
             }
-            ...on Section {
-              id
+            ... on Section {
+              anchorId
               title
               description
               border
               layout {
                 ... on Alert {
                   title
-                  alertIcon: icon
+                  icon
                   content
                   alertColor: color
+                  action
                   alertLink: link {
                     text
                     newTab
                     icon
                     reference {
-                      relationTo
-                      value {
-                        ... on Page {
-                          slug
-                        }
-                        ... on ProtectedPage {
-                          slug
-                        }
+                      ... on Page {
+                        slug
                       }
                     }
                     type
@@ -85,7 +74,6 @@ export const PAGE = `#graphql
                   width
                 }
                 ... on ButtonLink {
-                  icon
                   color
                   blockType
                   link {
@@ -93,133 +81,8 @@ export const PAGE = `#graphql
                     newTab
                     icon
                     reference {
-                      relationTo
-                      value {
-                        ... on Page {
-                          slug
-                        }
-                        ... on ProtectedPage {
-                          slug
-                        }
-                      }
-                    }
-                    type
-                    url
-                  }
-                }
-              }
-              blockType
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const PROTECTED_PAGE = `#graphql
-  query ProtectedPage($slug: String) {
-    ProtectedPages(where: { slug: { equals: $slug}, _status: { equals: published } }) {
-      docs {
-        slug
-        name
-        meta {
-          title
-          description
-        }
-        content {
-          layout {
-            ... on Alert {
-              title
-              alertIcon: icon
-              content
-              alertColor: color
-              alertLink: link {
-                text
-                newTab
-                icon
-                reference {
-                  relationTo
-                  value {
-                    ... on Page {
-                      slug
-                    }
-                    ... on ProtectedPage {
-                      slug
-                    }
-                  }
-                }
-                type
-                url
-              }
-              alertWidth: width
-              blockType
-            }
-            ... on Content {
-              blockType
-              content
-              width
-            }
-            ...on Hero {
-              titleOne
-              titleTwo
-              subtitle
-              blockType
-            }
-            ...on Section {
-              id
-              title
-              description
-              border
-              layout {
-                ... on Alert {
-                  title
-                  alertIcon: icon
-                  content
-                  alertColor: color
-                  alertLink: link {
-                    text
-                    newTab
-                    icon
-                    reference {
-                      relationTo
-                      value {
-                        ... on Page {
-                          slug
-                        }
-                        ... on ProtectedPage {
-                          slug
-                        }
-                      }
-                    }
-                    type
-                    url
-                  }
-                  alertWidth: width
-                  blockType
-                }
-                ... on Content {
-                  blockType
-                  content
-                  width
-                }
-                ... on ButtonLink {
-                  icon
-                  color
-                  blockType
-                  link {
-                    text
-                    newTab
-                    icon
-                    reference {
-                      relationTo
-                      value {
-                        ... on Page {
-                          slug
-                        }
-                        ... on ProtectedPage {
-                          slug
-                        }
+                      ... on Page {
+                        slug
                       }
                     }
                     type
@@ -239,16 +102,6 @@ export const PROTECTED_PAGE = `#graphql
 export const PAGES = `#graphql
   query Pages {
     Pages(limit: 500) {
-      docs {
-        slug
-      }
-    }
-  }
-`;
-
-export const PROTECTED_PAGES = `#graphql
-  query ProtectedPages {
-    ProtectedPages(limit: 500) {
       docs {
         slug
       }
