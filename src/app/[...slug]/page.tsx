@@ -2,8 +2,8 @@ import { notFound } from 'next/navigation';
 
 import { Blocks } from '@/components/blocks';
 import ProtectedForm from '@/components/ProtectedForm';
-import { fetchGuest, fetchUser } from '@/lib/api';
-import { fetchPage, fetchPages } from '@/lib/graphql';
+import { fetchGuest, fetchPage, fetchUser } from '@/lib/api';
+import { fetchPages } from '@/lib/graphql';
 import { PayloadApiMe } from '@/lib/types/payload';
 
 export async function generateStaticParams() {
@@ -46,7 +46,8 @@ export default async function Page({ params: { slug } }: { params: { slug: strin
         <section className="mx-auto w-full max-w-sm px-4 py-12 text-center">
           <h1 className="mb-4 text-3xl tracking-wider">Protected</h1>
           <p className="mb-6 text-sm">
-            Enter the guest password found on the back of your save the date or invitation to view this page.
+            Enter the guest password found on the back of your save the date or invitation to view this page. You may
+            have to click Submit twice.
           </p>
           <ProtectedForm slug={slug} />
         </section>
