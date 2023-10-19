@@ -1,16 +1,15 @@
 export const GLOBALS = `#graphql
   query Globals {
-    NavMenu {
+    Navigation {
       links {
-        link {
-          text
-          newTab
-          reference {
-            slug
-          }
-          type
-          url
+        text
+        newTab
+        relationship {
+          slug
         }
+        type
+        url
+        anchor
       }
     }
   }

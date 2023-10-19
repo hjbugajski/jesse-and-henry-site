@@ -1,38 +1,99 @@
+export type PayloadLinkField = {
+  text: string;
+  icon?: string;
+  type: 'relationship' | 'external';
+  relationship: PayloadPage;
+  url: string;
+  anchor?: string;
+  rel?: 'noreferrer'[];
+  newTab?: boolean;
+  id?: string;
+};
+
+export interface Guest {
+  id: string;
+  first?: string;
+  middle?: string;
+  last?: string;
+  party?: PayloadParty;
+  side?: PayloadSide;
+  relation?: PayloadRelation;
+  phone?: string;
+  address?: string;
+  rsvpWelcomeParty?: 'accept' | 'decline';
+  rsvpWedding?: 'accept' | 'decline';
+  rsvpBrunch?: 'accept' | 'decline';
+  sort?: number;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string;
+  resetPasswordExpiration?: string;
+  salt?: string;
+  hash?: string;
+  loginAttempts?: number;
+  lockUntil?: string;
+  password?: string;
+}
+
+export interface PayloadParty {
+  id: string;
+  value: string;
+  color?: 'green' | 'teal' | 'cyan' | 'blue' | 'violet' | 'purple' | 'plum' | 'pink' | 'red' | 'orange';
+  sort?: number;
+  code?: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface PayloadSide {
+  id: string;
+  value: string;
+  color?: 'green' | 'teal' | 'cyan' | 'blue' | 'violet' | 'purple' | 'plum' | 'pink' | 'red' | 'orange';
+  sort?: number;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface PayloadRelation {
+  id: string;
+  value: string;
+  color?: 'green' | 'teal' | 'cyan' | 'blue' | 'violet' | 'purple' | 'plum' | 'pink' | 'red' | 'orange';
+  sort?: number;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface PayloadPage {
+  id: string;
+  slug?: string;
+  protected?: boolean;
+  name: string;
+  meta: {
+    title: string;
+    description: string;
+  };
+  content: {
+    layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock)[];
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: 'draft' | 'published';
+}
+
 export interface PayloadAlertBlock {
   title: string;
   icon: string;
   content: {
     [k: string]: unknown;
   }[];
-  alertColor: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
+  color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
   action?: boolean;
-  alertLink?: {
-    type: 'reference' | 'external';
-    newTab?: boolean;
-    text: string;
-    reference: PayloadPage;
-    url: string;
-    icon?: string;
-  };
-  alertWidth?: 'full' | 'max';
+  link?: PayloadLinkField;
+  width?: 'full' | 'max';
   id?: string;
   blockName?: string;
   blockType: 'alert';
-}
-
-export interface PayloadButtonLinkBlock {
-  color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
-  link: {
-    type: 'reference' | 'external';
-    newTab?: boolean;
-    text: string;
-    reference: PayloadPage;
-    url: string;
-    icon?: string;
-  };
-  id?: string;
-  blockName?: string;
-  blockType: 'buttonLink';
 }
 
 export interface PayloadContentBlock {
@@ -61,42 +122,38 @@ export interface PayloadSectionBlock {
     [k: string]: unknown;
   }[];
   border: 'none' | 'left' | 'right';
-  layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadButtonLinkBlock)[];
+  layout?: (PayloadAlertBlock | PayloadButtonLinkBlock | PayloadContentBlock)[];
   id?: string;
   blockName?: string;
   blockType: 'section';
 }
 
-export interface PayloadPage {
-  id: string;
-  slug?: string;
-  protected?: boolean;
-  name: string;
-  meta: {
-    title: string;
-    description: string;
-  };
-  content: {
-    layout?: (PayloadAlertBlock | PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock)[];
-  };
-  _status?: 'draft' | 'published';
-  createdAt: string;
-  updatedAt: string;
+export interface PayloadButtonLinkBlock {
+  color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
+  link: PayloadLinkField;
+  id?: string;
+  blockName?: string;
+  blockType: 'buttonLink';
 }
 
-export interface PayloadNavMenu {
+export interface PayloadUser {
   id: string;
-  links?: {
-    link: {
-      type: 'reference' | 'external';
-      newTab?: boolean;
-      text: string;
-      reference: PayloadPage;
-      url: string;
-      icon?: string;
-    };
-    id?: string;
-  }[];
+  roles: ('admin' | 'public')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string;
+  resetPasswordExpiration?: string;
+  salt?: string;
+  hash?: string;
+  loginAttempts?: number;
+  lockUntil?: string;
+  password?: string;
+}
+
+export interface PayloadNavigation {
+  id: string;
+  links?: PayloadLinkField[];
   updatedAt?: string;
   createdAt?: string;
 }
@@ -113,4 +170,17 @@ export interface PayloadApiMe {
   collection: string;
   token: string;
   exp: number;
+}
+
+export interface PayloadApi<T = any> {
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
 }

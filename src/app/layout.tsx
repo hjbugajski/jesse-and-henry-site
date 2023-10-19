@@ -44,12 +44,12 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { navMenu } = await fetchGlobals();
+  const { navigation } = await fetchGlobals();
 
   return (
     <html lang="en">
       <body className={classes(alice.variable, lato.variable)}>
-        <Navigation navMenu={navMenu} />
+        <Navigation navigation={navigation} />
         <main className="flex flex-1 flex-col md:mt-[4.75rem]">{children}</main>
         <Footer />
       </body>

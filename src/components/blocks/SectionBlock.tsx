@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Blocks } from '@/components/blocks';
 import Serialize from '@/components/Serialize';
 import { PayloadSectionBlock } from '@/lib/types/payload';
@@ -17,14 +19,14 @@ export default function SectionBlock({ block }: { block: PayloadSectionBlock }) 
     <section className={classes(variant[border])}>
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-9 py-12 md:px-4">
         <div>
-          <a
+          <Link
             href={`#${anchorId}`}
             className="block w-fit rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-40/50"
           >
             <h1 id={anchorId} className="mb-6 w-fit text-3xl tracking-wider">
               {title}
             </h1>
-          </a>
+          </Link>
           {description && <Serialize nodes={description as any} />}
         </div>
         {layout?.map((block, i) => <Blocks key={i} block={block as any} />)}

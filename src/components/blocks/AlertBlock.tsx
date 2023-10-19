@@ -3,9 +3,10 @@ import * as Alert from '@/lib/components/Alert';
 import { ButtonLink } from '@/lib/components/Button';
 import Icon from '@/lib/components/Icon';
 import { PayloadAlertBlock } from '@/lib/types/payload';
+import { constructUrl } from '@/lib/utils/link';
 
 export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
-  const { alertLink: link, alertColor: color, content, icon, title, alertWidth: width } = block;
+  const { link, color, content, icon, title, width } = block;
 
   const RenderAlert = () => (
     <Alert.Root color={color} icon={icon}>
@@ -16,9 +17,9 @@ export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
       {link && (
         <Alert.Actions>
           <ButtonLink
-            href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
+            href={constructUrl(link)}
             target={link.newTab ? '_blank' : ''}
-            rel={link.newTab ? 'noopener noreferrer' : ''}
+            rel={link.rel?.join(',') || ''}
             className="w-fit"
             color={color}
             iconPosition={link.icon ? 'right' : 'none'}

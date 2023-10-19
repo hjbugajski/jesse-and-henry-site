@@ -7,17 +7,18 @@ import { useMediaQuery } from 'usehooks-ts';
 
 import AppLink from '@/lib/components/AppLink';
 import Icon from '@/lib/components/Icon';
-import { PayloadNavMenu } from '@/lib/types/payload';
+import { PayloadLinkField, PayloadNavigation } from '@/lib/types/payload';
+import { constructUrl } from '@/lib/utils/link';
 
-function NavLinks({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
+function NavLinks({ links }: { links: PayloadLinkField[] | undefined }) {
   return (
     <>
-      {navMenu?.links?.map(({ link }, i) => (
+      {links?.map((link, i) => (
         <li key={i}>
           <AppLink
-            href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
+            href={constructUrl(link)}
             target={link.newTab ? '_blank' : undefined}
-            rel={link.type === 'external' ? 'noopener noreferrer' : undefined}
+            rel={link.rel?.join(',') || ''}
             className="h-6 px-2 text-sm"
           >
             {link.text}
@@ -28,7 +29,7 @@ function NavLinks({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
   );
 }
 
-function MobileMenu({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
+function MobileMenu({ links }: { links: PayloadLinkField[] | undefined }) {
   return (
     <li>
       <Dialog.Root>
@@ -39,13 +40,13 @@ function MobileMenu({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
           <Dialog.Overlay className="fixed inset-0 z-40 bg-neutral-variant-10/50" />
           <Dialog.Content className="fixed bottom-2 left-4 right-4 z-50 flex flex-col items-end gap-2">
             <ul className="drop-shadow-neutral-10 flex w-full flex-1 flex-col rounded-xl bg-neutral-variant-90/75 p-3 drop-shadow-sm backdrop-blur-md">
-              {navMenu?.links?.map(({ link }, i) => (
+              {links?.map((link, i) => (
                 <li key={i} className="w-full">
                   <Dialog.Close asChild>
                     <AppLink
-                      href={link.type === 'external' ? link.url : `/${link.reference.slug}`}
+                      href={constructUrl(link)}
                       target={link.newTab ? '_blank' : undefined}
-                      rel={link.type === 'external' ? 'noopener noreferrer' : undefined}
+                      rel={link.rel?.join(',') || ''}
                       className="w-full justify-center px-4 py-2 text-lg"
                     >
                       {link.text}
@@ -78,7 +79,7 @@ function MobileMenu({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
   );
 }
 
-export default function Navigation({ navMenu }: { navMenu: PayloadNavMenu | undefined }) {
+export default function Navigation({ navigation }: { navigation: PayloadNavigation | undefined }) {
   const matchesDesktop = useMediaQuery('(min-width: 768px)');
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -94,7 +95,7 @@ export default function Navigation({ navMenu }: { navMenu: PayloadNavMenu | unde
             J&H
           </AppLink>
         </li>
-        {isDesktop ? <NavLinks navMenu={navMenu} /> : <MobileMenu navMenu={navMenu} />}
+        {isDesktop ? <NavLinks links={navigation?.links} /> : <MobileMenu links={navigation?.links} />}
       </ul>
     </nav>
   );
