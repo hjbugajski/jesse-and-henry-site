@@ -8,16 +8,14 @@ import { classes } from '@/lib/utils/classes';
 export default function SectionBlock({ block }: { block: PayloadSectionBlock }) {
   const { anchorId, border, description, layout, title } = block;
 
-  const variant = {
-    left: 'border-neutral-variant-50/50 border-t-2 border-b-2 md:border-l-2 md:ml-4 pl-4 md:pl-0 pr-4 md:rounded-tl-3xl md:rounded-bl-3xl',
-    right:
-      'border-neutral-variant-50/50 border-t-2 border-b-2 md:border-r-2 md:mr-4 pr-4 md:pr-0 pl-4 md:rounded-tr-3xl md:rounded-br-3xl',
-    none: 'px-4',
-  };
-
   return (
-    <section className={classes(variant[border])}>
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-9 py-12 md:px-4">
+    <section
+      className={classes(
+        border && 'border-b-2 border-t-2 border-neutral-variant-50/50 xl:rounded-3xl xl:border-2',
+        'mx-auto w-full max-w-7xl',
+      )}
+    >
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-9 px-4 py-12">
         <div>
           <Link
             href={`#${anchorId}`}

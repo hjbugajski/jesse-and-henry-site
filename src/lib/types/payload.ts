@@ -110,9 +110,17 @@ export interface PayloadHeroBlock {
   titleOne: string;
   titleTwo: string;
   subtitle: string;
+  image: PayloadMedia;
   id?: string;
   blockName?: string;
   blockType: 'hero';
+}
+
+export interface PayloadPhotosBlock {
+  photos: PayloadMedia[];
+  id?: string;
+  blockName?: string;
+  blockType: 'photos';
 }
 
 export interface PayloadSectionBlock {
@@ -121,19 +129,20 @@ export interface PayloadSectionBlock {
   description?: {
     [k: string]: unknown;
   }[];
-  border: 'none' | 'left' | 'right';
-  layout?: (PayloadAlertBlock | PayloadButtonLinkBlock | PayloadContentBlock)[];
+  border: boolean;
+  layout?: (PayloadAlertBlock | PayloadButtonLinksBlock | PayloadContentBlock | PayloadPhotosBlock)[];
   id?: string;
   blockName?: string;
   blockType: 'section';
 }
 
-export interface PayloadButtonLinkBlock {
-  color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
-  link: PayloadLinkField;
+export interface PayloadButtonLinksBlock {
+  links: (PayloadLinkField & {
+    color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
+  })[];
   id?: string;
   blockName?: string;
-  blockType: 'buttonLink';
+  blockType: 'buttonLinks';
 }
 
 export interface PayloadUser {
@@ -156,6 +165,38 @@ export interface PayloadNavigation {
   links?: PayloadLinkField[];
   updatedAt?: string;
   createdAt?: string;
+}
+
+export interface PayloadMedia {
+  id: string;
+  alt: string;
+  dataUrl: string;
+  updatedAt: string;
+  createdAt: string;
+  url: string;
+  filename: string;
+  mimeType: string;
+  filesize: number;
+  width: number;
+  height: number;
+  sizes: {
+    preview: {
+      url: string;
+      width: number;
+      height: number;
+      mimeType: string;
+      filesize: number;
+      filename: string;
+    };
+    thumbnail: {
+      url: string;
+      width: number;
+      height: number;
+      mimeType: string;
+      filesize: number;
+      filename: string;
+    };
+  };
 }
 
 export interface PayloadApiMe {
