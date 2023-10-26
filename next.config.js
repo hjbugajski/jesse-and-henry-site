@@ -1,7 +1,18 @@
+const production = process.env.NODE_ENV === 'production';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     serverActions: true,
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: production ? 'https' : 'http',
+        hostname: production ? '*.jesseandhenry.com' : 'localhost',
+        pathname: '/media/**',
+      },
+    ],
   },
   redirects: async () => {
     return [

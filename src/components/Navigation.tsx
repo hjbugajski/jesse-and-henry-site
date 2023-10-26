@@ -38,8 +38,8 @@ function MobileMenu({ links }: { links: PayloadLinkField[] | undefined }) {
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-neutral-variant-10/50" />
-          <Dialog.Content className="fixed bottom-2 left-4 right-4 z-50 flex flex-col items-end gap-2">
-            <ul className="drop-shadow-neutral-10 flex w-full flex-1 flex-col rounded-xl bg-neutral-variant-90/75 p-3 drop-shadow-sm backdrop-blur-md">
+          <Dialog.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-end">
+            <ul className="drop-shadow-neutral-10 flex w-full flex-1 flex-col bg-neutral-99/75 p-3 drop-shadow-sm backdrop-blur-md">
               {links?.map((link, i) => (
                 <li key={i} className="w-full">
                   <Dialog.Close asChild>
@@ -55,7 +55,7 @@ function MobileMenu({ links }: { links: PayloadLinkField[] | undefined }) {
                 </li>
               ))}
             </ul>
-            <ul className="drop-shadow-neutral-10 flex w-full items-center justify-between rounded-xl bg-neutral-variant-90/75 p-3 drop-shadow-sm backdrop-blur-md">
+            <ul className="drop-shadow-neutral-10 flex h-[65px] w-full items-center justify-between bg-neutral-99/75 px-4 drop-shadow-sm backdrop-blur-md">
               <li>
                 <Dialog.Close asChild>
                   <AppLink href="/" className="h-6 px-2 font-serif uppercase tracking-widest">
@@ -88,8 +88,8 @@ export default function Navigation({ navigation }: { navigation: PayloadNavigati
   }, [matchesDesktop]);
 
   return (
-    <nav className="fixed bottom-2 left-4 right-4 z-30 flex flex-row items-center justify-between gap-4 rounded-xl bg-neutral-variant-90/75 p-3 backdrop-blur-md md:bottom-[unset] md:top-2">
-      <ul className="flew-row flex h-9 w-full items-center gap-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 flex h-16 flex-row items-center justify-between gap-4 bg-neutral-99/75 backdrop-blur-md md:bottom-[unset] md:top-0">
+      <ul className="flew-row mx-auto flex h-9 w-full max-w-7xl items-center gap-1 px-4">
         <li className="mr-auto">
           <AppLink href="/" className="h-9 pl-2 pr-1 font-serif uppercase tracking-widest">
             J&H
