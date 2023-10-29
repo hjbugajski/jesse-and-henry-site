@@ -50,7 +50,7 @@ export const IconBorgo = ({ className }: { className?: string }) => {
 
 export default function Venue() {
   return (
-    <div className="relative my-4 flex h-96 w-full items-center justify-center rounded-xl bg-[url('../../public/images/borgo.jpg')] bg-cover bg-center">
+    <div className="relative my-4 flex h-96 w-full items-center justify-center rounded-xl bg-[url('/images/borgo.jpg')] bg-cover bg-center">
       <div className="absolute inset-0 z-0 h-full w-full rounded-xl bg-neutral-10/50" />
       <AppLink
         href="https://www.borgocorsignano.it/en/"

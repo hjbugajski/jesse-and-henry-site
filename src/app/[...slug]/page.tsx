@@ -50,7 +50,6 @@ export default async function Page({ params: { slug } }: { params: { slug: strin
             this page.
           </p>
           <ProtectedForm slug={slug} />
-          <p className="mt-4 text-xs italic text-neutral-variant-30/80">You may have click Submit twice.</p>
         </section>
       );
     }

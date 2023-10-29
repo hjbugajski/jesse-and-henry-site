@@ -40,7 +40,6 @@ export const metadata: Metadata = {
       { url: '/favicons/android-chrome-512x512.png', sizes: '512x512' },
     ],
   },
-  themeColor: '#fbfdf8',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
