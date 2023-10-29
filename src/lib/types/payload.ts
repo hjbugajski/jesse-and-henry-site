@@ -1,10 +1,10 @@
 export type PayloadLinkField = {
   text: string;
   icon?: string;
-  type: 'relationship' | 'external';
+  type: 'internal' | 'external';
   relationship: PayloadPage;
-  url: string;
   anchor?: string;
+  url: string;
   rel?: 'noreferrer'[];
   newTab?: boolean;
   id?: string;
