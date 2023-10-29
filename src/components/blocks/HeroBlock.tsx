@@ -14,17 +14,17 @@ export default function HeroBlock({ block: { titleOne, titleTwo, subtitle, image
           placeholder="blur"
           blurDataURL={image.dataUrl}
           loading="eager"
-          className="w-full object-cover object-center"
+          className="min-h-full w-full object-cover object-center"
         />
-        <div className="absolute top-4 flex h-fit w-full max-w-xs flex-1 flex-col items-center justify-center gap-6 rounded-xl bg-neutral-variant-90/75 p-6 text-center backdrop-blur-sm md:left-8 md:top-8 md:p-8">
+        <div className="absolute left-0 right-0 top-0 flex h-fit w-full flex-1 flex-col items-center justify-center gap-6 bg-neutral-99/50 p-6 text-center backdrop-blur-md md:left-8 md:top-8 md:max-w-xs md:rounded-xl md:p-8">
           <div className="flex w-full flex-col items-center justify-center gap-4">
-            <h1 className="text-5xl tracking-[0.5rem]">{titleOne}</h1>
-            <div className="flex w-full flex-row items-center justify-center gap-8 font-serif text-3xl">
+            <h1 className="text-4xl tracking-[0.5rem] md:text-5xl">{titleOne}</h1>
+            <div className="flex w-full flex-row items-center justify-center gap-8 font-serif text-2xl md:text-3xl">
               <span className="w-full border-t border-t-neutral-10/80" />
               &
               <span className="w-full border-t border-t-neutral-10/80" />
             </div>
-            <h1 className="text-5xl tracking-[0.5rem]">{titleTwo}</h1>
+            <h1 className="text-4xl tracking-[0.5rem] md:text-5xl">{titleTwo}</h1>
           </div>
           <p>{subtitle}</p>
         </div>
