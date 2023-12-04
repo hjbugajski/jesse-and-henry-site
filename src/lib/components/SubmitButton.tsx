@@ -1,7 +1,6 @@
 'use client';
 
-// @ts-expect-error - No type definitions for this package
-import { experimental_useFormStatus as useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 
 import Spinner from '@/lib/components/Spinner';
 

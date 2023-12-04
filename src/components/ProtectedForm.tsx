@@ -1,7 +1,6 @@
 'use client';
 
-// @ts-expect-error - No type definitions for this package
-import { experimental_useFormState as useFormState } from 'react-dom';
+import { useFormState } from 'react-dom';
 
 import { protectedLogin } from '@/app/actions';
 import SubmitButton from '@/lib/components/SubmitButton';
