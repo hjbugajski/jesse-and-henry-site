@@ -1,6 +1,8 @@
+import Link from 'next/link';
+
 import Serialize from '@/components/Serialize';
-import * as Alert from '@/lib/components/Alert';
-import { ButtonLink } from '@/lib/components/Button';
+import { Alert, AlertBody, AlertTitle } from '@/lib/components/Alert';
+import { Button } from '@/lib/components/Button';
 import Icon from '@/lib/components/Icon';
 import { PayloadAlertBlock } from '@/lib/types/payload';
 import { constructUrl } from '@/lib/utils/link';
@@ -9,28 +11,21 @@ export default function AlertBlock({ block }: { block: PayloadAlertBlock }) {
   const { link, color, content, icon, title, width } = block;
 
   const RenderAlert = () => (
-    <Alert.Root color={color} icon={icon}>
-      <Alert.Title>{title}</Alert.Title>
-      <Alert.Body>
+    <Alert color={color}>
+      <Icon name={icon} />
+      <AlertBody>
+        <AlertTitle>{title}</AlertTitle>
         <Serialize nodes={content as any} />
-      </Alert.Body>
+      </AlertBody>
       {link && (
-        <Alert.Actions>
-          <ButtonLink
-            href={constructUrl(link)}
-            target={link.newTab ? '_blank' : ''}
-            rel={link.rel?.join(',') || ''}
-            className="w-fit"
-            color={color}
-            iconPosition={link.icon ? 'right' : 'none'}
-            size="sm"
-          >
+        <Button asChild color={color} iconPosition={link.icon ? 'right' : 'none'} size="sm" className="mt-4">
+          <Link href={constructUrl(link)} target={link.newTab ? '_blank' : ''} rel={link.rel?.join(',') || ''}>
             {link.text}
             {link.icon && <Icon name={link.icon} />}
-          </ButtonLink>
-        </Alert.Actions>
+          </Link>
+        </Button>
       )}
-    </Alert.Root>
+    </Alert>
   );
 
   if (width === 'max') {

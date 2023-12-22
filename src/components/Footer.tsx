@@ -1,6 +1,9 @@
-import Countdown from '@/components/Countdown';
-import AppLink from '@/lib/components/AppLink';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+
 import Icon from '@/lib/components/Icon';
+
+const Countdown = dynamic(() => import('@/components/Countdown'), { ssr: false });
 
 export default function Footer() {
   return (
@@ -15,9 +18,9 @@ export default function Footer() {
           </p>
           <p className="text-xs">
             &copy; {new Date().getFullYear()}{' '}
-            <AppLink href="https://bugajski.io" target="_blank" rel="noreferrer">
+            <Link href="https://bugajski.io" target="_blank" rel="noreferrer" className="no-underline">
               Henry Bugajski
-            </AppLink>
+            </Link>
           </p>
         </div>
       </div>

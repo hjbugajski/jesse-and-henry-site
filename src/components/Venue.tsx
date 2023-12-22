@@ -1,4 +1,4 @@
-import AppLink from '@/lib/components/AppLink';
+import Link from 'next/link';
 
 export const IconBorgo = ({ className }: { className?: string }) => {
   return (
@@ -52,15 +52,15 @@ export default function Venue() {
   return (
     <div className="relative my-4 flex h-96 w-full items-center justify-center rounded-xl bg-[url('/images/borgo.jpg')] bg-cover bg-center">
       <div className="absolute inset-0 z-0 h-full w-full rounded-xl bg-neutral-10/50" />
-      <AppLink
+      <Link
         href="https://www.borgocorsignano.it/en/"
         target="_blank"
         rel="noreferrer"
-        className="drop-shadow-neutral-10 z-10 flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl text-neutral-95 drop-shadow-sm hover:text-primary-95"
+        className="drop-shadow-neutral-10 z-10 flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl text-neutral-95 no-underline drop-shadow-sm hover:text-primary-95"
       >
         <IconBorgo className="h-32 w-32" />
         <h2 className="mx-auto max-w-xs text-center text-xl">Borgo Corsignano</h2>
-      </AppLink>
+      </Link>
     </div>
   );
 }

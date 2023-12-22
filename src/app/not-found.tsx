@@ -1,4 +1,6 @@
-import { ButtonLink } from '@/lib/components/Button';
+import Link from 'next/link';
+
+import { Button } from '@/lib/components/Button';
 import Icon from '@/lib/components/Icon';
 
 export default function NotFound() {
@@ -8,10 +10,12 @@ export default function NotFound() {
         <h1 className="mb-4 text-2xl">Page Not Found</h1>
         <p>The page you&apos;re looking for does not exist or has been moved.</p>
       </div>
-      <ButtonLink href="/" iconPosition="right" size="md">
-        Home
-        <Icon name="arrow_forward" />
-      </ButtonLink>
+      <Button asChild iconPosition="right">
+        <Link href="/">
+          Home
+          <Icon name="arrow_forward" />
+        </Link>
+      </Button>
     </section>
   );
 }

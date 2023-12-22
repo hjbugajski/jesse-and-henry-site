@@ -1,45 +1,50 @@
-import Icon from '@/lib/components/Icon';
-import { Color } from '@/lib/types/color';
-import { backgroundColorClass, classes, textColorClass } from '@/lib/utils/classes';
+import { HTMLAttributes, forwardRef } from 'react';
 
-export type AlertProps = {
-  children: React.ReactNode;
-  className?: string;
-  color?: Color;
-  icon: string;
-};
+import { type VariantProps, cva } from 'class-variance-authority';
 
-function Alert({ children, className, color = 'neutral', icon }: AlertProps) {
-  return (
-    <div
-      className={classes(
-        className,
-        backgroundColorClass[color],
-        textColorClass[color],
-        'flex flex-row gap-4 rounded-xl p-4 text-left text-sm',
-      )}
-    >
-      <Icon name={icon} className={classes(textColorClass[color], 'text-xl leading-6')} />
-      <div>{children}</div>
-    </div>
-  );
-}
+import { cn } from '@/lib/utils/cn';
 
-function AlertTitle({ children }: { children: React.ReactNode }) {
-  return <h1 className="mb-1 font-sans text-base font-bold normal-case tracking-wider">{children}</h1>;
-}
+const alertVariants = cva(
+  'relative rounded-xl py-4 pr-4 pl-12 text-left text-sm [&>i]:absolute [&>i]:top-4 [&>i]:left-4 [&>i]:text-lg [&>i]:leading-6',
+  {
+    variants: {
+      color: {
+        neutral: 'text-neutral-10/80 bg-neutral-90/50',
+        'neutral-variant': 'text-neutral-variant-30/80 bg-neutral-variant-90/50',
+        primary: 'text-primary-20/80 bg-primary-90/50',
+        secondary: 'text-secondary-20/80 bg-secondary-90/50',
+        tertiary: 'text-tertiary-20/80 bg-tertiary-90/50',
+        danger: 'text-danger-20/80 bg-danger-90/50',
+      },
+    },
+    defaultVariants: {
+      color: 'neutral',
+    },
+  },
+);
 
-function AlertBody({ children }: { children: React.ReactNode }) {
-  return <div className="my-1 first:mt-0 last:mb-0">{children}</div>;
-}
+const Alert = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>>(
+  ({ className, color, ...props }, ref) => (
+    <div ref={ref} role="alert" {...props} className={cn(alertVariants({ color }), className)} />
+  ),
+);
+Alert.displayName = 'Alert';
 
-function AlertActions({ children }: { children: React.ReactNode }) {
-  return <div className="mt-4 flex flex-row items-center gap-2">{children}</div>;
-}
+const AlertBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+  <div ref={ref} {...props} className={className} />
+));
+AlertBody.displayName = 'AlertBody';
 
-const Root = Alert;
-const Title = AlertTitle;
-const Body = AlertBody;
-const Actions = AlertActions;
+const AlertTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    // eslint-disable-next-line jsx-a11y/heading-has-content
+    <h1
+      ref={ref}
+      {...props}
+      className={cn('mb-1 font-sans text-base font-bold normal-case tracking-wider', className)}
+    />
+  ),
+);
+AlertTitle.displayName = 'AlertTitle';
 
-export { Alert, AlertTitle, AlertBody, Root, Title, Body, Actions };
+export { Alert, AlertBody, AlertTitle };

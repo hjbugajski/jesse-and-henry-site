@@ -1,7 +1,8 @@
 import { GLOBALS } from '@/lib/graphql/gloabls';
 import { PAGES } from '@/lib/graphql/pages';
 import { PayloadNavigation } from '@/lib/types/payload';
-import { PAYLOAD_GRAPHQL } from '@/lib/utils/env';
+
+const PAYLOAD_GRAPHQL = process.env.NEXT_PUBLIC_PAYLOAD_URL! + '/api/graphql';
 
 const NEXT_CONFIG = {
   revalidate: 60,
