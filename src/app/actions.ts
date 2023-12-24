@@ -1,5 +1,6 @@
 'use server';
 
+import { config } from 'dotenv';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -8,6 +9,8 @@ import { fetchLogin } from '@/lib/api';
 import { FormState } from '@/lib/types/form';
 import { PayloadGuest, PayloadUser } from '@/lib/types/payload';
 import { setToken } from '@/lib/utils/cookies';
+
+config();
 
 const { DOMAIN, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN, PROTECTED_EMAIL } = process.env;
 
