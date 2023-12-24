@@ -1,46 +1,157 @@
+'use server';
+
 import { stringify } from 'qs';
 
-import { PayloadApi, PayloadApiMe, PayloadPage } from '@/lib/types/payload';
+import {
+  PayloadApiLogin,
+  PayloadApiLogout,
+  PayloadApiMe,
+  PayloadGuest,
+  PayloadPage,
+  PayloadRsvpFields,
+  PayloadUser,
+} from '@/lib/types/payload';
 import { getToken } from '@/lib/utils/cookies';
-import { PAYLOAD_API, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN } from '@/lib/utils/env';
+
+const { NEXT_PUBLIC_PAYLOAD_URL, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN } = process.env;
+const PAYLOAD_API = NEXT_PUBLIC_PAYLOAD_URL! + '/api';
 
 const NEXT_CONFIG = {
   revalidate: 60,
 };
 
-export async function fetchLogin(email: string, password: string) {
-  return await fetch(`${PAYLOAD_API}/users/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
-}
+export type AuthCollection = 'guests' | 'users';
 
-export async function fetchMe(path: string, tokenKey: string): Promise<PayloadApiMe | undefined> {
+export const fetchGuestRsvp = async (
+  id: string,
+  field: PayloadRsvpFields,
+  rsvp: 'accept' | 'decline' | null,
+): Promise<PayloadGuest | null> => {
   try {
-    const res = await fetch(`${PAYLOAD_API}/${path}/me`, {
-      method: 'GET',
+    const res = await fetch(`${PAYLOAD_API}/guests/${id}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `JWT ${getToken(tokenKey)}`,
+        Authorization: `JWT ${getToken(PAYLOAD_GUEST_TOKEN!)}`,
       },
+      body: JSON.stringify({ [field]: rsvp }),
     });
+    const data = await res.json();
 
-    return res.ok ? await res.json() : undefined;
+    if (!res.ok || data?.errors) {
+      return null;
+    }
+
+    return data;
   } catch (error) {
     console.error(JSON.stringify(error));
 
-    return undefined;
+    return null;
   }
-}
+};
 
-export const fetchPage = async (segments?: string[]): Promise<PayloadPage | undefined> => {
-  const token = getToken(PAYLOAD_PROTECTED_TOKEN) ?? getToken(PAYLOAD_GUEST_TOKEN);
+export const fetchGuests = async (): Promise<PayloadGuest[] | null> => {
+  try {
+    const res = await fetch(`${PAYLOAD_API}/guests`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${getToken(PAYLOAD_GUEST_TOKEN!)}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!res.ok || data?.errors) {
+      return null;
+    }
+
+    return data.docs;
+  } catch (error) {
+    console.error(JSON.stringify(error));
+
+    return null;
+  }
+};
+
+const fetchMe = async <T>(collection: AuthCollection): Promise<PayloadApiMe<T> | null> => {
+  try {
+    const token = collection === 'users' ? PAYLOAD_PROTECTED_TOKEN! : PAYLOAD_GUEST_TOKEN!;
+    const res = await fetch(`${PAYLOAD_API}/${collection}/me`, {
+      method: 'GET',
+      next: {
+        tags: ['me'],
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${getToken(token)}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!res.ok || data?.errors) {
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(JSON.stringify(error));
+
+    return null;
+  }
+};
+
+export const fetchLogin = async <T>(
+  collection: AuthCollection,
+  body: { email: string; password: string },
+): Promise<PayloadApiLogin<T> | null> => {
+  try {
+    const res = await fetch(`${PAYLOAD_API}/${collection}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+
+    if (!res.ok || data?.errors) {
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(JSON.stringify(error));
+
+    return null;
+  }
+};
+
+export const fetchLogout = async (collection: AuthCollection): Promise<PayloadApiLogout | null> => {
+  try {
+    const token = collection === 'users' ? PAYLOAD_PROTECTED_TOKEN! : PAYLOAD_GUEST_TOKEN!;
+    const res = await fetch(`${PAYLOAD_API}/${collection}/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${getToken(token)}`,
+      },
+    });
+    const data = await res.json();
+
+    if (!res.ok || data?.errors) {
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(JSON.stringify(error));
+
+    return null;
+  }
+};
+
+export const fetchPage = async (segments?: string[]): Promise<PayloadPage | null> => {
+  const token = getToken(PAYLOAD_PROTECTED_TOKEN!) ?? getToken(PAYLOAD_GUEST_TOKEN!);
   const slugSegments = segments || ['home'];
   const slug = slugSegments[slugSegments.length - 1];
   const query = stringify({
@@ -65,23 +176,20 @@ export const fetchPage = async (segments?: string[]): Promise<PayloadPage | unde
       headers,
       next: NEXT_CONFIG,
     });
+    const data = await res.json();
 
-    if (res.ok) {
-      const data: PayloadApi<PayloadPage> = await res.json();
-
-      return data?.docs?.[0] ?? undefined;
+    if (!res.ok || data?.errors) {
+      return null;
     }
+
+    return data?.docs?.[0] ?? null;
   } catch (error) {
     console.error(JSON.stringify(error));
 
-    return undefined;
+    return null;
   }
 };
 
-export async function fetchUser() {
-  return await fetchMe('users', PAYLOAD_PROTECTED_TOKEN);
-}
+export const fetchUser = async () => await fetchMe<PayloadUser>('users');
 
-export async function fetchGuest() {
-  return await fetchMe('guests', PAYLOAD_GUEST_TOKEN);
-}
+export const fetchGuest = async () => await fetchMe<PayloadGuest>('guests');

@@ -4,6 +4,8 @@ import { Text } from 'slate';
 
 import Venue from '@/components/Venue';
 
+import Registry from './Registry';
+
 interface Node {
   type: string;
   value?: {
@@ -121,6 +123,8 @@ export default function Serialize({ nodes }: SerializeProps) {
             );
           case 'venue':
             return <Venue key={i} />;
+          case 'registry':
+            return <Registry key={i} />;
           default:
             return (
               <p key={i} className="my-2 first:mt-0 last:mb-0">

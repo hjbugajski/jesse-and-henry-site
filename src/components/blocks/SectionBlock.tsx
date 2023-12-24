@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { Blocks } from '@/components/blocks';
 import Serialize from '@/components/Serialize';
 import { PayloadSectionBlock } from '@/lib/types/payload';
-import { classes } from '@/lib/utils/classes';
+import { cn } from '@/lib/utils/cn';
 
 export default function SectionBlock({ block }: { block: PayloadSectionBlock }) {
   const { anchorId, border, description, layout, title } = block;
 
   return (
     <section
-      className={classes(
+      className={cn(
         border && 'border-b-2 border-t-2 border-neutral-variant-50/50 xl:rounded-3xl xl:border-2',
         'mx-auto w-full max-w-7xl',
       )}
@@ -19,7 +19,7 @@ export default function SectionBlock({ block }: { block: PayloadSectionBlock }) 
         <div>
           <Link
             href={`#${anchorId}`}
-            className="block w-fit rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-40/50"
+            className="block w-fit rounded-md no-underline focus:outline-none focus:ring-2 focus:ring-neutral-40/50"
           >
             <h1 id={anchorId} className="mb-6 w-fit text-3xl tracking-wider">
               {title}

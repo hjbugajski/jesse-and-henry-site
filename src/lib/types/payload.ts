@@ -1,3 +1,7 @@
+export type PayloadRsvpFields = 'rsvpWelcomeParty' | 'rsvpRehearsalDinner' | 'rsvpWeddingDay' | 'rsvpPoolDay';
+
+export type PayloadRsvpStatus = 'accept' | 'decline' | null;
+
 export type PayloadLinkField = {
   text: string;
   icon?: string;
@@ -9,32 +13,6 @@ export type PayloadLinkField = {
   newTab?: boolean;
   id?: string;
 };
-
-export interface Guest {
-  id: string;
-  first?: string;
-  middle?: string;
-  last?: string;
-  party?: PayloadParty;
-  side?: PayloadSide;
-  relation?: PayloadRelation;
-  phone?: string;
-  address?: string;
-  rsvpWelcomeParty?: 'accept' | 'decline';
-  rsvpWedding?: 'accept' | 'decline';
-  rsvpBrunch?: 'accept' | 'decline';
-  sort?: number;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string;
-  resetPasswordExpiration?: string;
-  salt?: string;
-  hash?: string;
-  loginAttempts?: number;
-  lockUntil?: string;
-  password?: string;
-}
 
 export interface PayloadParty {
   id: string;
@@ -145,26 +123,8 @@ export interface PayloadButtonLinksBlock {
   blockType: 'buttonLinks';
 }
 
-export interface PayloadUser {
-  id: string;
-  roles: ('admin' | 'public')[];
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string;
-  resetPasswordExpiration?: string;
-  salt?: string;
-  hash?: string;
-  loginAttempts?: number;
-  lockUntil?: string;
-  password?: string;
-}
-
 export interface PayloadNavigation {
-  id: string;
-  links?: PayloadLinkField[];
-  updatedAt?: string;
-  createdAt?: string;
+  links?: PayloadLinkField[] | undefined;
 }
 
 export interface PayloadMedia {
@@ -199,15 +159,40 @@ export interface PayloadMedia {
   };
 }
 
-export interface PayloadApiMe {
-  user: {
-    id: string;
-    email: string;
-    _verified: boolean;
-    createdAt: string;
-    updatedAt: string;
-    _strategy: string;
-  };
+export interface PayloadUser {
+  id: string;
+  roles: ('admin' | 'public')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+}
+
+export interface PayloadGuest {
+  id: string;
+  first?: string;
+  middle?: string;
+  last?: string;
+  rsvpWelcomeParty?: 'accept' | 'decline';
+  rsvpRehearsalDinner?: 'accept' | 'decline';
+  rsvpWeddingDay?: 'accept' | 'decline';
+  rsvpPoolDay?: 'accept' | 'decline';
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface PayloadApiLogin<T = PayloadUser> {
+  exp: number;
+  message: string;
+  token: string;
+  user: T;
+}
+
+export interface PayloadApiLogout {
+  message: string;
+}
+
+export interface PayloadApiMe<T = PayloadUser> {
+  user: T;
   collection: string;
   token: string;
   exp: number;

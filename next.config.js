@@ -1,4 +1,4 @@
-const production = true; // process.env.NODE_ENV === 'production';
+const production = process.env.NODE_ENV === 'production';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

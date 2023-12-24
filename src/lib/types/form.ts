@@ -1,4 +1,9 @@
 export type FormState = {
   status: 'pending' | 'error' | 'valid' | null;
-  message: string | null;
+  errors: {
+    formErrors: string[];
+    fieldErrors?: {
+      [key: string]: string[];
+    };
+  };
 };

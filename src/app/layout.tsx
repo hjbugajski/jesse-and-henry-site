@@ -6,7 +6,7 @@ import { Alice, Lato } from 'next/font/google';
 import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
 import { fetchGlobals } from '@/lib/graphql';
-import { classes } from '@/lib/utils/classes';
+import { cn } from '@/lib/utils/cn';
 
 const alice = Alice({ weight: '400', subsets: ['latin'], variable: '--font-alice' });
 const lato = Lato({ weight: ['400', '700'], subsets: ['latin'], variable: '--font-lato' });
@@ -47,8 +47,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en">
-      <body className={classes(alice.variable, lato.variable)}>
-        <Navigation navigation={navigation} />
+      <body className={cn(alice.variable, lato.variable)}>
+        <Navigation {...navigation} />
         <main className="flex flex-1 flex-col md:mt-16">{children}</main>
         <Footer />
       </body>

@@ -2,6 +2,7 @@ import AlertBlock from '@/components/blocks/AlertBlock';
 import ButtonLinkBlock from '@/components/blocks/ButtonLinksBlock';
 import ContentBlock from '@/components/blocks/ContentBlock';
 import HeroBlock from '@/components/blocks/HeroBlock';
+import PhotosBlock from '@/components/blocks/PhotosBlock';
 import SectionBlock from '@/components/blocks/SectionBlock';
 import {
   PayloadAlertBlock,
@@ -10,8 +11,6 @@ import {
   PayloadPhotosBlock,
   PayloadSectionBlock,
 } from '@/lib/types/payload';
-
-import PhotosBlock from './PhotosBlock';
 
 const blocks = {
   alert: AlertBlock,
