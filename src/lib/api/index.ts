@@ -1,5 +1,6 @@
 'use server';
 
+import { config } from 'dotenv';
 import { stringify } from 'qs';
 
 import {
@@ -12,6 +13,8 @@ import {
   PayloadUser,
 } from '@/lib/types/payload';
 import { getToken } from '@/lib/utils/cookies';
+
+config();
 
 const { NEXT_PUBLIC_PAYLOAD_URL, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN } = process.env;
 const PAYLOAD_API = NEXT_PUBLIC_PAYLOAD_URL! + '/api';
