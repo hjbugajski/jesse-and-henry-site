@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
+import { fetchGuest, fetchGuests } from '@/app/actions';
 import RsvpForm from '@/components/RsvpForm';
-import { fetchGuest, fetchGuests } from '@/lib/api';
+import RsvpLoginForm from '@/components/RsvpLoginForm';
 import { Alert, AlertBody, AlertTitle } from '@/lib/components/Alert';
 import { Button } from '@/lib/components/Button';
 import Icon from '@/lib/components/Icon';
@@ -17,7 +17,12 @@ export default async function Page() {
   const data = await fetchGuest();
 
   if (!data || !data.user) {
-    redirect('/rsvp/login');
+    return (
+      <div className="mx-auto w-full max-w-sm px-4 py-12">
+        <h1 className="mb-4 text-3xl tracking-wider">Guest login</h1>
+        <RsvpLoginForm slug="rsvp" />
+      </div>
+    );
   }
 
   const { user } = data;

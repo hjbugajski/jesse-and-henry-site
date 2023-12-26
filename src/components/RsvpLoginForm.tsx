@@ -18,7 +18,7 @@ const initialState: FormState = {
   },
 };
 
-export default function RsvpLoginForm() {
+export default function RsvpLoginForm({ slug }: { slug: string }) {
   const [state, formAction] = useFormState(guestLogin, initialState);
 
   return (
@@ -80,7 +80,7 @@ export default function RsvpLoginForm() {
             <Message className="text-danger-30/80">{state.errors.fieldErrors.code.join(' ')}</Message>
           )}
         </FieldSet>
-        <input type="hidden" name="redirect" value="rsvp" />
+        <input type="hidden" name="slug" value={slug} />
 
         <SubmitButton className="mt-4">Log In</SubmitButton>
       </form>

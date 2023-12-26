@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 
+import { fetchGuest, fetchPage, fetchUser } from '@/app/actions';
 import { Blocks } from '@/components/blocks';
 import ProtectedForm from '@/components/ProtectedForm';
-import { fetchGuest, fetchPage, fetchUser } from '@/lib/api';
 import { fetchPages } from '@/lib/graphql';
 import { PayloadApiMe, PayloadGuest, PayloadUser } from '@/lib/types/payload';
 
