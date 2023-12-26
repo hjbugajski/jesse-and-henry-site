@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 
 import * as RadioGroup from '@radix-ui/react-radio-group';
 
-import { fetchGuestRsvp } from '@/lib/api';
+import { fetchGuestRsvp } from '@/app/actions';
 import { Button } from '@/lib/components/Button';
 import { FieldSet, Legend } from '@/lib/components/FormField';
 import Icon from '@/lib/components/Icon';
