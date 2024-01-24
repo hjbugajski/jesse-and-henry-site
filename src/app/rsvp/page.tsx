@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 import { fetchGuest, fetchGuests } from '@/app/actions';
+import LogOutButton from '@/components/LogOutButton';
 import RsvpForm from '@/components/RsvpForm';
-import RsvpLoginForm from '@/components/RsvpLoginForm';
 import { Alert, AlertBody, AlertTitle } from '@/lib/components/Alert';
 import { Button } from '@/lib/components/Button';
 import Icon from '@/lib/components/Icon';
@@ -14,21 +14,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const data = await fetchGuest();
+  const [guest, guests] = await Promise.all([fetchGuest(), fetchGuests()]);
 
-  if (!data || !data.user) {
-    return (
-      <div className="mx-auto w-full max-w-sm px-4 py-12">
-        <h1 className="mb-4 text-3xl tracking-wider">Guest login</h1>
-        <RsvpLoginForm slug="rsvp" />
-      </div>
-    );
-  }
-
-  const { user } = data;
-  const guests = await fetchGuests();
-
-  if (!guests) {
+  if (!guest || !guest.user || !guests) {
     return (
       <section className="mx-auto w-full max-w-lg py-12">
         <Alert color="danger" className="[&>i]:leading-5">
@@ -45,9 +33,15 @@ export default async function Page() {
     );
   }
 
+  const { user } = guest;
+
   return (
     <section className="mx-auto w-full max-w-lg py-12">
-      <h1 className="mb-2 text-3xl tracking-wider">Welcome, {user.first}</h1>
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <h1 className="text-xl leading-none tracking-wider">RSVP</h1>
+        <LogOutButton collection="guests" redirectUrl="/rsvp/login" />
+      </div>
+      <h2 className="mb-2 text-3xl tracking-wider">Welcome, {user.first}</h2>
       <p className="mb-2 text-sm">
         {guests?.length === 1 ? 'RSVP below.' : 'RSVP below for each guest in your party.'}
       </p>
@@ -67,19 +61,21 @@ export default async function Page() {
         </Alert>
       </div>
 
-      <RsvpForm {...user} />
-      {guests?.filter((guest) => guest.id !== user.id).map((guest, i) => <RsvpForm key={i} {...guest} />)}
+      <RsvpForm guest={user} open />
+      {guests?.filter((guest) => guest.id !== user.id).map((guest, i) => <RsvpForm key={i} guest={guest} />)}
 
-      <Alert className="mt-6">
-        <Icon name="help" />
-        <AlertBody>
-          <AlertTitle>RSVP Support</AlertTitle>
-          <p>
-            If you are having any issues submitting RSVPs, reach out to{' '}
-            <Link href="mailto:support@jesseandhenry.com">support@jesseandhenry.com</Link>.
-          </p>
-        </AlertBody>
-      </Alert>
+      <div className="border-t-2 border-neutral-variant-50/50 pt-6">
+        <Alert>
+          <Icon name="help" />
+          <AlertBody>
+            <AlertTitle>RSVP Support</AlertTitle>
+            <p>
+              If you are having any issues submitting RSVPs, reach out to{' '}
+              <Link href="mailto:support@jesseandhenry.com">support@jesseandhenry.com</Link>.
+            </p>
+          </AlertBody>
+        </Alert>
+      </div>
     </section>
   );
 }

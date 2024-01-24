@@ -1,23 +1,10 @@
 'use server';
 
-import { config } from 'dotenv';
-import { revalidatePath } from 'next/cache';
-import { stringify } from 'qs';
-import { z } from 'zod';
+import { redirect } from 'next/navigation';
 
-import { FormState } from '@/lib/types/form';
-import {
-  PayloadApiLogin,
-  PayloadApiLogout,
-  PayloadApiMe,
-  PayloadGuest,
-  PayloadPage,
-  PayloadRsvpFields,
-  PayloadUser,
-} from '@/lib/types/payload';
-import { getToken, setToken } from '@/lib/utils/cookies';
-
-config();
+import { ActionState } from '@/lib/types/action-state';
+import { PayloadApiLogin, PayloadApiMe, PayloadGuest, PayloadPage, PayloadUser } from '@/lib/types/payload';
+import { deleteCookie, getCookieValue, setCookie } from '@/lib/utils/cookies';
 
 const { DOMAIN, NEXT_PUBLIC_PAYLOAD_URL, PAYLOAD_GUEST_TOKEN, PAYLOAD_PROTECTED_TOKEN, PROTECTED_EMAIL } = process.env;
 const PAYLOAD_API = NEXT_PUBLIC_PAYLOAD_URL! + '/api';
@@ -28,41 +15,14 @@ const NEXT_CONFIG = {
 
 export type AuthCollection = 'guests' | 'users';
 
-export const fetchGuestRsvp = async (
-  id: string,
-  field: PayloadRsvpFields,
-  rsvp: 'accept' | 'decline' | null,
-): Promise<PayloadGuest | null> => {
-  try {
-    const res = await fetch(`${PAYLOAD_API}/guests/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `JWT ${getToken(PAYLOAD_GUEST_TOKEN!)}`,
-      },
-      body: JSON.stringify({ [field]: rsvp }),
-    });
-    const data = await res.json();
-
-    if (!res.ok || data?.errors) {
-      return null;
-    }
-
-    return data;
-  } catch (error) {
-    console.error(JSON.stringify(error));
-
-    return null;
-  }
-};
-
 export const fetchGuests = async (): Promise<PayloadGuest[] | null> => {
   try {
     const res = await fetch(`${PAYLOAD_API}/guests`, {
       method: 'GET',
+      cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `JWT ${getToken(PAYLOAD_GUEST_TOKEN!)}`,
+        Authorization: `JWT ${getCookieValue(PAYLOAD_GUEST_TOKEN!)}`,
       },
     });
     const data = await res.json();
@@ -81,12 +41,13 @@ export const fetchGuests = async (): Promise<PayloadGuest[] | null> => {
 
 const fetchMe = async <T>(collection: AuthCollection): Promise<PayloadApiMe<T> | null> => {
   try {
-    const token = collection === 'users' ? PAYLOAD_PROTECTED_TOKEN! : PAYLOAD_GUEST_TOKEN!;
+    const token = collection === 'guests' ? PAYLOAD_GUEST_TOKEN! : PAYLOAD_PROTECTED_TOKEN!;
     const res = await fetch(`${PAYLOAD_API}/${collection}/me`, {
       method: 'GET',
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `JWT ${getToken(token)}`,
+        Authorization: `JWT ${getCookieValue(token)}`,
       },
     });
     const data = await res.json();
@@ -110,6 +71,7 @@ export const fetchLogin = async <T>(
   try {
     const res = await fetch(`${PAYLOAD_API}/${collection}/login`, {
       method: 'POST',
+      cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -129,54 +91,44 @@ export const fetchLogin = async <T>(
   }
 };
 
-export const fetchLogout = async (collection: AuthCollection): Promise<PayloadApiLogout | null> => {
-  try {
-    const token = collection === 'users' ? PAYLOAD_PROTECTED_TOKEN! : PAYLOAD_GUEST_TOKEN!;
-    const res = await fetch(`${PAYLOAD_API}/${collection}/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `JWT ${getToken(token)}`,
-      },
-    });
-    const data = await res.json();
+export const fetchLogout = async (
+  collection: AuthCollection,
+  redirectUrl: string,
+): Promise<ActionState | undefined> => {
+  const token = collection === 'users' ? PAYLOAD_PROTECTED_TOKEN! : PAYLOAD_GUEST_TOKEN!;
+  const res = await fetch(`${PAYLOAD_API}/${collection}/logout`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${getCookieValue(token)}`,
+    },
+  });
+  const data = await res.json();
 
-    if (!res.ok || data?.errors) {
-      return null;
-    }
-
-    return data;
-  } catch (error) {
-    console.error(JSON.stringify(error));
-
-    return null;
+  if (!res.ok || data?.errors) {
+    return {
+      status: 'error',
+      message: data.errors[0].message,
+    };
   }
+
+  deleteCookie(token);
+  redirect(redirectUrl);
 };
 
 export const fetchPage = async (segments?: string[]): Promise<PayloadPage | null> => {
-  const token = getToken(PAYLOAD_PROTECTED_TOKEN!) ?? getToken(PAYLOAD_GUEST_TOKEN!);
-  const slugSegments = segments || ['home'];
+  const token = getCookieValue(PAYLOAD_PROTECTED_TOKEN!) ?? getCookieValue(PAYLOAD_GUEST_TOKEN!);
+  const slugSegments = segments && segments.length > 0 ? segments : ['home'];
   const slug = slugSegments[slugSegments.length - 1];
-  const query = stringify({
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  });
-
-  let headers = {
-    'Content-Type': 'application/json',
-  };
-
-  if (token) {
-    headers = Object.assign(headers, { Authorization: `JWT ${token}` });
-  }
 
   try {
-    const res = await fetch(`${PAYLOAD_API}/pages?depth=1&${query}`, {
+    const res = await fetch(`${PAYLOAD_API}/pages?where[slug][equals]=${slug}`, {
       method: 'GET',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `JWT ${token}` } : {}),
+      },
       next: NEXT_CONFIG,
     });
     const data = await res.json();
@@ -197,70 +149,66 @@ export const fetchUser = async () => await fetchMe<PayloadUser>('users');
 
 export const fetchGuest = async () => await fetchMe<PayloadGuest>('guests');
 
-export async function guestLogin(prevState: any, formData: FormData): Promise<FormState | undefined> {
-  const schema = z.object({
-    first: z.string().min(1),
-    last: z.string().min(1),
-    password: z.string().min(1),
-    code: z.string().min(6).max(6),
-    slug: z.string(),
-  });
-  const parsed = schema.safeParse(Object.fromEntries(formData.entries()));
+type GuestLoginParams = {
+  first: string;
+  last: string;
+  password: string;
+  code: string;
+};
 
-  if (!parsed.success) {
-    return { status: 'error', errors: parsed.error.flatten() };
+export async function guestLogin(values: GuestLoginParams): Promise<ActionState> {
+  const { first, last, password: parsedPassword, code } = values;
+  const email = `${first.toLowerCase()}.${last.toLowerCase()}@${DOMAIN}`;
+  const password = `${parsedPassword}-${code}`;
+
+  const data = await fetchLogin<PayloadGuest>('guests', { email, password });
+
+  if (!data) {
+    return {
+      status: 'error',
+      message:
+        'The provided information is incorrect. Verify that your name, password, and party code match your invitation.',
+    };
   }
 
-  try {
-    const { first, last, password: parsedPassword, code, slug } = parsed.data;
-    const email = `${first.toLowerCase()}.${last.toLowerCase()}@${DOMAIN}`;
-    const password = `${parsedPassword}-${code}`;
+  setCookie(PAYLOAD_GUEST_TOKEN!, data.token, data.exp);
 
-    const data = await fetchLogin<PayloadGuest>('guests', { email, password });
-
-    if (!data) {
-      return {
-        status: 'error',
-        errors: {
-          formErrors: [
-            'The provided information is incorrect. Verify that your name, password, and party code match your invitation.',
-          ],
-        },
-      };
-    }
-
-    setToken(PAYLOAD_GUEST_TOKEN!, data.token);
-    revalidatePath(`/${slug}`);
-  } catch (error) {
-    console.error(JSON.stringify(error));
-
-    return { status: 'error', errors: { formErrors: ['There was an error submitting the form.'] } };
-  }
+  return { status: 'valid', message: data.message };
 }
 
-export async function protectedLogin(prevState: any, formData: FormData): Promise<FormState | undefined> {
-  const schema = z.object({
-    password: z.string().min(1),
-    slug: z.string(),
+export const updateGuest = async (id: string, fields: Partial<PayloadGuest>): Promise<ActionState> => {
+  const res = await fetch(`${PAYLOAD_API}/guests/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${getCookieValue(PAYLOAD_GUEST_TOKEN!)}`,
+    },
+    body: JSON.stringify(fields),
   });
-  const parsed = schema.safeParse(Object.fromEntries(formData.entries()));
+  const data = await res.json();
 
-  if (!parsed.success) {
-    return { status: 'error', errors: parsed.error.flatten() };
+  if (!res.ok || data?.errors) {
+    return {
+      status: 'error',
+      message: data.errors[0].message,
+    };
   }
 
-  try {
-    const data = await fetchLogin<PayloadUser>('users', { email: PROTECTED_EMAIL!, password: parsed.data.password });
+  return { status: 'valid', message: data.message };
+};
 
-    if (!data) {
-      return { status: 'error', errors: { formErrors: ['The provided password is incorrect.'] } };
-    }
+type ProtectedLoginParams = {
+  password: string;
+};
 
-    setToken(PAYLOAD_PROTECTED_TOKEN!, data.token);
-    revalidatePath(`/${parsed.data.slug}`);
-  } catch (error) {
-    console.error(JSON.stringify(error));
+export async function protectedLogin({ password }: ProtectedLoginParams): Promise<ActionState> {
+  const data = await fetchLogin<PayloadUser>('users', { email: PROTECTED_EMAIL!, password });
 
-    return { status: 'error', errors: { formErrors: ['Failed to validate password.'] } };
+  if (!data) {
+    return { status: 'error', message: 'The provided password is incorrect.' };
   }
+
+  setCookie(PAYLOAD_PROTECTED_TOKEN!, data.token, data.exp);
+
+  return { status: 'valid', message: data.message };
 }
