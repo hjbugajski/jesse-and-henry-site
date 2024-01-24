@@ -3,7 +3,6 @@ import { notFound, redirect } from 'next/navigation';
 import { fetchGuest, fetchPage, fetchUser } from '@/app/actions';
 import { Blocks } from '@/components/blocks';
 import { fetchPages } from '@/lib/graphql';
-import { PayloadApiMe, PayloadGuest, PayloadUser } from '@/lib/types/payload';
 
 export async function generateStaticParams() {
   try {
@@ -31,16 +30,10 @@ export default async function Page({ params: { slug } }: { params: { slug: strin
     notFound();
   }
 
-  if (page?.protected) {
-    let userAuth: PayloadApiMe<PayloadUser> | null | undefined;
-    let guestAuth: PayloadApiMe<PayloadGuest> | null | undefined;
+  if (page.protected) {
+    const [user, guest] = await Promise.all([fetchUser(), fetchGuest()]);
 
-    await Promise.all([fetchUser(), fetchGuest()]).then(([user, guest]) => {
-      userAuth = user;
-      guestAuth = guest;
-    });
-
-    if ((!userAuth && !guestAuth) || (!userAuth?.user && !guestAuth?.user)) {
+    if ((!user || !user?.user) && (!guest || !guest?.user)) {
       redirect(`/protected?redirectUrl=${encodeURIComponent(`/${slug.join('/')}`)}`);
     }
   }

@@ -118,7 +118,8 @@ export const fetchLogout = async (
 };
 
 export const fetchPage = async (segments?: string[]): Promise<PayloadPage | null> => {
-  const token = getCookieValue(PAYLOAD_PROTECTED_TOKEN!) ?? getCookieValue(PAYLOAD_GUEST_TOKEN!);
+  const [user, guest] = await Promise.all([fetchUser(), fetchGuest()]);
+  const token = user?.token ?? guest?.token;
   const slugSegments = segments && segments.length > 0 ? segments : ['home'];
   const slug = slugSegments[slugSegments.length - 1];
 
@@ -172,6 +173,7 @@ export async function guestLogin(values: GuestLoginParams): Promise<ActionState>
   }
 
   setCookie(PAYLOAD_GUEST_TOKEN!, data.token, data.exp);
+  deleteCookie(PAYLOAD_PROTECTED_TOKEN!);
 
   return { status: 'valid', message: data.message };
 }
