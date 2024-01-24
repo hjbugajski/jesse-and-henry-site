@@ -1,53 +1,81 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useState } from 'react';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { InferType, object, string } from 'yup';
 
 import { protectedLogin } from '@/app/actions';
-import SubmitButton from '@/components/SubmitButton';
-import { Alert, AlertBody } from '@/lib/components/Alert';
-import { FieldSet, Input, Label, Message } from '@/lib/components/FormField';
-import Icon from '@/lib/components/Icon';
-import { FormState } from '@/lib/types/form';
-import { cn } from '@/lib/utils/cn';
+import { Button } from '@/lib/components/Button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/lib/components/Form';
+import { Input } from '@/lib/components/Input';
+import Spinner from '@/lib/components/Spinner';
+import { useToast } from '@/lib/hooks/use-toast';
+import { ActionState } from '@/lib/types/action-state';
 
-const initialState: FormState = {
-  status: null,
-  errors: {
-    formErrors: [],
-    fieldErrors: {},
-  },
+const initialState: ActionState = {
+  status: 'idle',
+  message: null,
 };
 
-export default function ProtectedForm({ slug }: { slug: string[] }) {
-  const [state, formAction] = useFormState(protectedLogin, initialState);
+const formSchema = object({
+  password: string().required('Password is required'),
+});
+
+export default function ProtectedForm() {
+  const [formState, setFormState] = useState(initialState);
+
+  const form = useForm<InferType<typeof formSchema>>({
+    resolver: yupResolver(formSchema),
+    defaultValues: {
+      password: '',
+    },
+  });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
+
+  async function onSubmit(values: InferType<typeof formSchema>) {
+    setFormState({ status: 'pending', message: null });
+
+    const state = await protectedLogin(values);
+
+    if (state.status === 'valid') {
+      router.push(searchParams.get('redirectUrl') || '/');
+    } else if (state.status === 'error') {
+      setFormState(state);
+      toast({
+        title: 'Login failed',
+        description: state.message,
+        variant: 'danger',
+      });
+    } else {
+      setFormState({ status: 'idle', message: null });
+    }
+  }
 
   return (
-    <>
-      {state?.errors?.formErrors && state.errors.formErrors.length > 0 && (
-        <Alert aria-live="polite" color="danger" className="my-6 [&>i]:leading-5">
-          <Icon name="warning" />
-          <AlertBody>
-            <p>{state.errors.formErrors.join(' ')}</p>
-          </AlertBody>
-        </Alert>
-      )}
-      <form action={formAction} className="flex w-full flex-col gap-4 text-left">
-        <FieldSet>
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            className={cn(state?.errors?.fieldErrors?.password && 'border-danger-50/80')}
-          />
-          {state?.errors?.fieldErrors?.password && (
-            <Message className="text-danger-30/80">{state.errors.fieldErrors.password.join(' ')}</Message>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-4 text-left">
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </FieldSet>
-        <input type="hidden" name="slug" value={slug.join('/')} />
-
-        <SubmitButton className="mt-4" />
+        />
+        <Button type="submit" disabled={formState.status === 'pending'} size="lg" variant="solid">
+          {formState.status === 'pending' ? <Spinner /> : 'Submit'}
+        </Button>
       </form>
-    </>
+    </Form>
   );
 }

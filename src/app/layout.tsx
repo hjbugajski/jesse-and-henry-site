@@ -6,6 +6,7 @@ import { Alice, Lato } from 'next/font/google';
 import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
 import { fetchGlobals } from '@/lib/graphql';
+import Toaster from '@/lib/providers/Toaster';
 import { cn } from '@/lib/utils/cn';
 
 const alice = Alice({ weight: '400', subsets: ['latin'], variable: '--font-alice' });
@@ -51,6 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Navigation {...navigation} />
         <main className="flex flex-1 flex-col md:mt-16">{children}</main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

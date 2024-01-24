@@ -1,89 +1,125 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useState } from 'react';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { InferType, object, string } from 'yup';
 
 import { guestLogin } from '@/app/actions';
-import SubmitButton from '@/components/SubmitButton';
-import { Alert, AlertBody } from '@/lib/components/Alert';
-import { FieldSet, Input, Label, Message } from '@/lib/components/FormField';
-import Icon from '@/lib/components/Icon';
-import { FormState } from '@/lib/types/form';
-import { cn } from '@/lib/utils/cn';
+import { Button } from '@/lib/components/Button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/lib/components/Form';
+import { Input } from '@/lib/components/Input';
+import Spinner from '@/lib/components/Spinner';
+import { useToast } from '@/lib/hooks/use-toast';
+import { ActionState } from '@/lib/types/action-state';
 
-const initialState: FormState = {
-  status: null,
-  errors: {
-    formErrors: [],
-    fieldErrors: {},
-  },
+const initialState: ActionState = {
+  status: 'idle',
+  message: null,
 };
 
-export default function RsvpLoginForm({ slug }: { slug: string }) {
-  const [state, formAction] = useFormState(guestLogin, initialState);
+const formSchema = object({
+  first: string().required('First name is required'),
+  last: string().required('Last name is required'),
+  password: string().required('Password is required'),
+  code: string().required('Code is required'),
+});
+
+export default function RsvpLoginForm() {
+  const [formState, setFormState] = useState(initialState);
+
+  const form = useForm<InferType<typeof formSchema>>({
+    resolver: yupResolver(formSchema),
+    defaultValues: {
+      first: '',
+      last: '',
+      password: '',
+      code: '',
+    },
+  });
+  const router = useRouter();
+  const { toast } = useToast();
+
+  async function onSubmit(values: InferType<typeof formSchema>) {
+    setFormState({ status: 'pending', message: null });
+
+    const state = await guestLogin(values);
+
+    if (state.status === 'valid') {
+      router.push('/rsvp');
+    } else if (state.status === 'error') {
+      setFormState(state);
+      toast({
+        title: 'Login failed',
+        description: state.message,
+        variant: 'danger',
+      });
+    } else {
+      setFormState({ status: 'idle', message: null });
+    }
+  }
 
   return (
-    <>
-      {state?.errors?.formErrors && state.errors.formErrors.length > 0 && (
-        <Alert aria-live="polite" color="danger" className="my-6 [&>i]:leading-5">
-          <Icon name="warning" />
-          <AlertBody>
-            <p>{state.errors.formErrors.join(' ')}</p>
-          </AlertBody>
-        </Alert>
-      )}
-      <form action={formAction} className="flex w-full flex-col gap-4 text-left">
-        <FieldSet>
-          <Label htmlFor="first">First Name</Label>
-          <Input
-            id="first"
-            name="first"
-            type="text"
-            className={cn(state?.errors?.fieldErrors?.first && 'border-danger-50/80')}
-          />
-          {state?.errors?.fieldErrors?.first && (
-            <Message className="text-danger-30/80">{state.errors.fieldErrors.first.join(' ')}</Message>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col gap-4 text-left">
+        <FormField
+          control={form.control}
+          name="first"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </FieldSet>
-        <FieldSet>
-          <Label htmlFor="last">Last Name</Label>
-          <Input
-            id="last"
-            name="last"
-            type="text"
-            className={cn(state?.errors?.fieldErrors?.last && 'border-danger-50/80')}
-          />
-          {state?.errors?.fieldErrors?.last && (
-            <Message className="text-danger-30/80">{state.errors.fieldErrors.last.join(' ')}</Message>
+        />
+        <FormField
+          control={form.control}
+          name="last"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </FieldSet>
-        <FieldSet>
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            className={cn(state?.errors?.fieldErrors?.password && 'border-danger-50/80')}
-          />
-          {state?.errors?.fieldErrors?.password && (
-            <Message className="text-danger-30/80">{state.errors.fieldErrors.password.join(' ')}</Message>
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </FieldSet>
-        <FieldSet>
-          <Label htmlFor="code">Party Code</Label>
-          <Input
-            id="code"
-            name="code"
-            type="text"
-            className={cn(state?.errors?.fieldErrors?.code && 'border-danger-50/80')}
-          />
-          {state?.errors?.fieldErrors?.code && (
-            <Message className="text-danger-30/80">{state.errors.fieldErrors.code.join(' ')}</Message>
+        />
+        <FormField
+          control={form.control}
+          name="code"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Party Code</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </FieldSet>
-        <input type="hidden" name="slug" value={slug} />
-
-        <SubmitButton className="mt-4">Log In</SubmitButton>
+        />
+        <Button type="submit" disabled={formState.status === 'pending'} size="lg" variant="solid">
+          {formState.status === 'pending' ? <Spinner /> : 'Submit'}
+        </Button>
       </form>
-    </>
+    </Form>
   );
 }

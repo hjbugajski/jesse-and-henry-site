@@ -176,6 +176,12 @@ export interface PayloadGuest {
   rsvpRehearsalDinner?: 'accept' | 'decline';
   rsvpWeddingDay?: 'accept' | 'decline';
   rsvpPoolDay?: 'accept' | 'decline';
+  legalName?: string | null;
+  dateOfBirth?: string | null;
+  countryOfBirth?: string | null;
+  allergies?: string | null;
+  transportationToVenue?: ('yes' | 'no') | null;
+  transportationFromVenue?: ('yes' | 'no') | null;
   updatedAt: string;
   createdAt: string;
 }
