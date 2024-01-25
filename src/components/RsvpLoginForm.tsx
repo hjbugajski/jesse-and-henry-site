@@ -11,7 +11,7 @@ import { guestLogin } from '@/app/actions';
 import { Button } from '@/lib/components/Button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/lib/components/Form';
 import { Input } from '@/lib/components/Input';
-import Spinner from '@/lib/components/Spinner';
+import { Spinner } from '@/lib/components/Spinner';
 import { useToast } from '@/lib/hooks/use-toast';
 import { ActionState } from '@/lib/types/action-state';
 

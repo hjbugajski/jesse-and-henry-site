@@ -1,33 +1,43 @@
-import AlertBlock from '@/components/blocks/AlertBlock';
-import ButtonLinkBlock from '@/components/blocks/ButtonLinksBlock';
-import ContentBlock from '@/components/blocks/ContentBlock';
-import HeroBlock from '@/components/blocks/HeroBlock';
-import PhotosBlock from '@/components/blocks/PhotosBlock';
-import SectionBlock from '@/components/blocks/SectionBlock';
+import { FC } from 'react';
+
+import BlockAlert from '@/components/blocks/Alert';
+import BlockButtonLink from '@/components/blocks/ButtonLink';
+import BlockGallery from '@/components/blocks/Gallery';
+import BlockHero from '@/components/blocks/Hero';
+import BlockSection from '@/components/blocks/Section';
 import {
-  PayloadAlertBlock,
-  PayloadContentBlock,
-  PayloadHeroBlock,
-  PayloadPhotosBlock,
-  PayloadSectionBlock,
+  PayloadBlockAlert,
+  PayloadBlockButtonLink,
+  PayloadBlockGallery,
+  PayloadBlockHero,
+  PayloadBlockImageLink,
+  PayloadBlockSection,
 } from '@/lib/types/payload';
 
+import BlockImageLink from './ImageLink';
+import BlockRegistry from './Registry';
+
 const blocks = {
-  alert: AlertBlock,
-  buttonLinks: ButtonLinkBlock,
-  content: ContentBlock,
-  hero: HeroBlock,
-  photos: PhotosBlock,
-  section: SectionBlock,
+  alert: BlockAlert,
+  buttonLink: BlockButtonLink,
+  gallery: BlockGallery,
+  hero: BlockHero,
+  imageLink: BlockImageLink,
+  registry: BlockRegistry,
+  section: BlockSection,
 };
 
 export function Blocks({
-  block,
-}: {
-  block: PayloadAlertBlock | PayloadContentBlock | PayloadHeroBlock | PayloadSectionBlock | PayloadPhotosBlock;
-}) {
-  const RenderBlock = blocks[block.blockType];
+  blockType,
+  ...props
+}:
+  | PayloadBlockAlert
+  | PayloadBlockButtonLink
+  | PayloadBlockGallery
+  | PayloadBlockHero
+  | PayloadBlockImageLink
+  | PayloadBlockSection) {
+  const RenderBlock: FC<any> = blocks[blockType];
 
-  // @ts-expect-error block type is correct
-  return RenderBlock ? <RenderBlock block={block} /> : null;
+  return RenderBlock ? <RenderBlock {...props} /> : null;
 }

@@ -3,13 +3,29 @@ export const GLOBALS = `#graphql
     Navigation {
       links {
         text
-        newTab
+        icon
+        type
         relationship {
           slug
         }
-        type
-        url
         anchor
+        url
+        rel
+        newTab
+      }
+      showCta
+      callToAction {
+        text
+        icon
+        type
+        relationship {
+          slug
+        }
+        anchor
+        url
+        rel
+        newTab
+        color
       }
     }
   }

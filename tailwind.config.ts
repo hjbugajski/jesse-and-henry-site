@@ -123,7 +123,7 @@ const config: Config = {
         widest: '0.25rem',
       },
       screens: {
-        'md-lg': '896px',
+        'md-lg': '992px',
       },
     },
   },

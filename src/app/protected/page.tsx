@@ -1,13 +1,18 @@
 import { Suspense } from 'react';
 
-import { Metadata } from 'next';
-
+import { fetchPage } from '@/app/actions';
+import { metadata } from '@/app/layout';
 import ProtectedForm from '@/components/ProtectedForm';
+import { pageTitle } from '@/lib/utils/page-title';
 
-export const metadata: Metadata = {
-  title: 'Protected Login | Jesse & Henry',
-  description: 'Log in to view protected pages.',
-};
+export async function generateMetadata({ params: { slug } }: { params: { slug: string[] } }) {
+  const page = await fetchPage(slug);
+
+  return {
+    title: pageTitle(page?.title, metadata),
+    description: page?.description || metadata.description,
+  };
+}
 
 const ProtectedFormLoading = () => (
   <div className="flex flex-col gap-4">
