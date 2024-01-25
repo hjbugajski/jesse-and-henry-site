@@ -1,136 +1,137 @@
 import { Fragment } from 'react';
 
-import { Text } from 'slate';
+import Link from 'next/link';
 
-import Venue from '@/components/Venue';
+import { Blocks } from '@/components/blocks';
+import { PayloadFieldLink } from '@/lib/types/payload';
+import { cn } from '@/lib/utils/cn';
+import { constructUrl } from '@/lib/utils/link';
+import { slugify } from '@/lib/utils/slugify';
 
-import Registry from './Registry';
+export type SerializeProps = {
+  nodes: any[];
+};
 
-interface Node {
-  type: string;
-  value?: {
-    url: string;
-    alt: string;
-  };
-  children?: Node[];
-  url?: string;
-  [key: string]: unknown;
-}
-
-interface SerializeProps {
-  nodes: Node[] | undefined;
-}
+const renderText = (node: any) => {
+  switch (node.format) {
+    case 1: // bold
+      return <strong>{node.text}</strong>;
+    case 1 << 1: // italic
+      return <em>{node.text}</em>;
+    case 1 << 2: // strikethrough
+      return <span className="line-through">{node.text}</span>;
+    case 1 << 3: // underline
+      return <span className="underline underline-offset-4">{node.text}</span>;
+    case 1 << 4: // code
+      return <code>{node.text}</code>;
+    case 1 << 5: // subscript
+      return <sub>{node.text}</sub>;
+    case 1 << 6: // superscript
+      return <sup>{node.text}</sup>;
+    default:
+      return node.text;
+  }
+};
 
 export default function Serialize({ nodes }: SerializeProps) {
-  return !nodes ? null : (
+  const alignClasses = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+  };
+  const headingClasses = {
+    h1: 'mb-6 mt-9 text-3xl',
+    h2: 'mb-4 mt-7 font-sans text-2xl font-bold normal-case tracking-normal',
+    h3: 'mb-3 mt-6 font-sans text-xl font-bold normal-case tracking-normal',
+  };
+  const indentClasses = {
+    0: '',
+    1: 'indent-4',
+    2: 'indent-8',
+    3: 'indent-12',
+    4: 'indent-16',
+  };
+
+  return !nodes || nodes.length === 0 ? null : (
     <Fragment>
       {nodes.map((node, i) => {
-        if (Text.isText(node)) {
-          let text: any = node.text;
-
-          if (node.bold) {
-            text = <strong>{text}</strong>;
-          }
-
-          if (node.italic) {
-            text = <em>{text}</em>;
-          }
-
-          if (node.underline) {
-            text = <span className="underline underline-offset-4">{text}</span>;
-          }
-
-          if (node.strikethrough) {
-            text = <span className="line-through">{text}</span>;
-          }
-
-          if (node.code) {
-            text = <code>{text}</code>;
-          }
-
-          return <Fragment key={i}>{text}</Fragment>;
-        }
+        // @ts-expect-error – valid keys
+        const alignClass = alignClasses[node.format ?? 'left'];
+        // @ts-expect-error – valid keys
+        const indentClass = indentClasses[node.indent && node.indent < 5 ? node.indent : 0];
 
         switch (node.type) {
-          case 'h1':
+          case 'heading':
             return (
-              <h1 key={i} className="mb-6 mt-9 text-3xl first:mt-0 last:mb-0">
-                <Serialize nodes={node.children} />
-              </h1>
-            );
-          case 'h2':
-            return (
-              <h2
+              <node.tag
                 key={i}
-                className="mb-4 mt-7 font-sans text-2xl font-bold normal-case tracking-wide first:mt-0 last:mb-0"
+                id={slugify(node.children?.map((v: any) => v.text).join(' '))}
+                className={cn(
+                  'first:mt-0 last:mb-0',
+                  alignClass,
+                  indentClass,
+                  // @ts-expect-error – valid keys
+                  headingClasses[node.tag],
+                )}
               >
                 <Serialize nodes={node.children} />
-              </h2>
+              </node.tag>
             );
-          case 'h3':
+          case 'paragraph':
+            return node.children?.length > 0 ? (
+              <p key={i} className={cn('my-2 first:mt-0 last:mb-0', alignClass, indentClass)}>
+                <Serialize nodes={node.children} />
+              </p>
+            ) : null;
+          case 'link':
+          case 'autolink': {
+            const { children, fields } = node;
+            const link: PayloadFieldLink = {
+              text: '',
+              type: fields.linkType === 'custom' ? 'external' : 'internal',
+              relationship: fields.doc,
+              anchor: fields.anchor,
+              url: fields.url,
+              rel: fields.rel,
+              newTab: fields.newTab,
+            };
+
             return (
-              <h3
+              <Link
                 key={i}
-                className="mb-3 mt-6 font-sans text-xl font-bold normal-case tracking-wider first:mt-0 last:mb-0"
+                href={constructUrl(link)}
+                rel={fields.rel || undefined}
+                target={fields.newTab ? '_blank' : undefined}
+                className={cn(alignClass, indentClass)}
+              >
+                <Serialize nodes={children} />
+              </Link>
+            );
+          }
+          case 'list':
+            return (
+              <node.tag
+                key={i}
+                className={cn(
+                  node.listType === 'bullet' ? 'list-disc' : 'list-decimal',
+                  'my-3 space-y-1 pl-8 first:mt-0 last:mb-0',
+                  alignClass,
+                  indentClass,
+                )}
               >
                 <Serialize nodes={node.children} />
-              </h3>
+              </node.tag>
             );
-          case 'h4':
+          case 'listitem':
             return (
-              <h4
-                key={i}
-                className="mb-2 mt-5 font-sans text-base font-bold normal-case tracking-wider first:mt-0 last:mb-0"
-              >
-                <Serialize nodes={node.children} />
-              </h4>
-            );
-          case 'h5':
-            return (
-              <h5
-                key={i}
-                className="mb-2 mt-5 font-sans text-sm font-bold normal-case tracking-wider first:mt-0 last:mb-0"
-              >
-                <Serialize nodes={node.children} />
-              </h5>
-            );
-          case 'h6':
-            return (
-              <h6
-                key={i}
-                className="mb-2 mt-5 font-sans text-xs font-bold normal-case tracking-wider first:mt-0 last:mb-0"
-              >
-                <Serialize nodes={node.children} />
-              </h6>
-            );
-          case 'ul':
-            return (
-              <ul key={i} className="my-2 list-disc space-y-1 pl-8 first:mt-0 last:mb-0">
-                <Serialize nodes={node.children} />
-              </ul>
-            );
-          case 'ol':
-            return (
-              <ol key={i} className="my-2 list-decimal space-y-1 pl-8 first:mt-0 last:mb-0">
-                <Serialize nodes={node.children} />
-              </ol>
-            );
-          case 'li':
-            return (
-              <li key={i}>
+              <li key={i} className={cn(alignClass, indentClass)}>
                 <Serialize nodes={node.children} />
               </li>
             );
-          case 'venue':
-            return <Venue key={i} />;
-          case 'registry':
-            return <Registry key={i} />;
+          case 'block':
+            return <Blocks key={i} {...node.fields} />;
           default:
-            return (
-              <p key={i} className="my-2 first:mt-0 last:mb-0">
-                <Serialize nodes={node.children} />
-              </p>
-            );
+            return <Fragment key={i}>{renderText(node)}</Fragment>;
         }
       })}
     </Fragment>

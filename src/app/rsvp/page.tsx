@@ -1,17 +1,22 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 
-import { fetchGuest, fetchGuests } from '@/app/actions';
+import { fetchGuest, fetchGuests, fetchPage } from '@/app/actions';
+import { metadata } from '@/app/layout';
 import LogOutButton from '@/components/LogOutButton';
 import RsvpForm from '@/components/RsvpForm';
 import { Alert, AlertBody, AlertTitle } from '@/lib/components/Alert';
 import { Button } from '@/lib/components/Button';
-import Icon from '@/lib/components/Icon';
+import { Icon } from '@/lib/components/Icon';
+import { pageTitle } from '@/lib/utils/page-title';
 
-export const metadata: Metadata = {
-  title: 'RSVP | Jesse & Henry',
-  description: "RSVP to Jesse & Henry's wedding.",
-};
+export async function generateMetadata({ params: { slug } }: { params: { slug: string[] } }) {
+  const page = await fetchPage(slug);
+
+  return {
+    title: pageTitle(page?.title, metadata),
+    description: page?.description || metadata.description,
+  };
+}
 
 export default async function Page() {
   const [guest, guests] = await Promise.all([fetchGuest(), fetchGuests()]);
@@ -42,17 +47,23 @@ export default async function Page() {
         <LogOutButton collection="guests" redirectUrl="/rsvp/login" />
       </div>
       <h2 className="mb-2 text-3xl tracking-wider">Welcome, {user.first}</h2>
-      <p className="mb-2 text-sm">
-        {guests?.length === 1 ? 'RSVP below.' : 'RSVP below for each guest in your party.'}
-      </p>
+      <p className="mb-2 text-sm">{guests.length === 1 ? 'RSVP below.' : 'RSVP below for each guest in your party.'}</p>
 
       <div className="my-6 flex flex-col gap-2">
         <Alert color="tertiary" className="[&>i]:leading-5">
+          <Icon name="label_important" />
+          <AlertBody>
+            <p>
+              {guests.length === 1 ? 'RSVP' : 'RSVPs'} must be submitted by <strong>April 16, 2024</strong>.
+            </p>
+          </AlertBody>
+        </Alert>
+        <Alert className="[&>i]:leading-5">
           <Icon name="info" />
           <AlertBody>
             <p>More information about each wedding event can be found on the guest information page.</p>
           </AlertBody>
-          <Button asChild color="tertiary" size="sm" className="mt-4" iconPosition="right">
+          <Button asChild size="sm" className="mt-4" iconPosition="right">
             <Link href="/guest-information">
               View Information
               <Icon name="arrow_forward" />
@@ -62,13 +73,17 @@ export default async function Page() {
       </div>
 
       <RsvpForm guest={user} open />
-      {guests?.filter((guest) => guest.id !== user.id).map((guest, i) => <RsvpForm key={i} guest={guest} />)}
+      {guests
+        .filter((guest) => guest.id !== user.id)
+        .map((guest, i) => (
+          <RsvpForm key={i} guest={guest} />
+        ))}
 
       <div className="border-t-2 border-neutral-variant-50/50 pt-6">
         <Alert>
           <Icon name="help" />
           <AlertBody>
-            <AlertTitle>RSVP Support</AlertTitle>
+            <AlertTitle>Support</AlertTitle>
             <p>
               If you are having any issues submitting RSVPs, reach out to{' '}
               <Link href="mailto:support@jesseandhenry.com">support@jesseandhenry.com</Link>.

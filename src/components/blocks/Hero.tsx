@@ -1,8 +1,8 @@
 import Image from 'next/image';
 
-import { PayloadHeroBlock } from '@/lib/types/payload';
+import { PayloadBlockHero } from '@/lib/types/payload';
 
-export default function HeroBlock({ block: { titleOne, titleTwo, subtitle, image } }: { block: PayloadHeroBlock }) {
+export default function BlockHero({ image, titleOne, titleTwo, subtitle }: PayloadBlockHero) {
   return (
     <div className="mx-auto w-full max-w-7xl md:px-4">
       <div className="relative flex h-[768px] w-full justify-center overflow-clip sm:h-[1024px] md:justify-start md:rounded-3xl lg:h-[825px]">

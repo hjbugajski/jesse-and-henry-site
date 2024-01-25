@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { AuthCollection, fetchLogout } from '@/app/actions';
 import { Button } from '@/lib/components/Button';
-import Icon from '@/lib/components/Icon';
-import Spinner from '@/lib/components/Spinner';
+import { Icon } from '@/lib/components/Icon';
+import { Spinner } from '@/lib/components/Spinner';
 import { useToast } from '@/lib/hooks/use-toast';
 
 export default function LogOutButton({ collection, redirectUrl }: { collection: AuthCollection; redirectUrl: string }) {

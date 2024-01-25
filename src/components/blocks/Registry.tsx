@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { Button } from '@/lib/components/Button';
 import { Dialog, DialogContent, DialogTrigger } from '@/lib/components/Dialog';
-import Icon from '@/lib/components/Icon';
+import { Icon } from '@/lib/components/Icon';
 
 const IconCheck = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" className={className}>
@@ -114,7 +114,7 @@ const DialogZelle = () => (
   </div>
 );
 
-export default function Registry() {
+export default function BlockRegistry() {
   const paymentMethods = [
     {
       name: 'Zelle',

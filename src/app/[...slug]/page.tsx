@@ -1,8 +1,10 @@
 import { notFound, redirect } from 'next/navigation';
 
 import { fetchGuest, fetchPage, fetchUser } from '@/app/actions';
-import { Blocks } from '@/components/blocks';
+import { metadata } from '@/app/layout';
+import Serialize from '@/components/Serialize';
 import { fetchPages } from '@/lib/graphql';
+import { pageTitle } from '@/lib/utils/page-title';
 
 export async function generateStaticParams() {
   try {
@@ -18,8 +20,8 @@ export async function generateMetadata({ params: { slug } }: { params: { slug: s
   const page = await fetchPage(slug);
 
   return {
-    title: page?.meta?.title || 'Jesse & Henry',
-    description: page?.meta?.description || 'Jesse and Henry are getting married!',
+    title: pageTitle(page?.title, metadata),
+    description: page?.description || metadata.description,
   };
 }
 
@@ -38,5 +40,5 @@ export default async function Page({ params: { slug } }: { params: { slug: strin
     }
   }
 
-  return page.content?.layout?.map((block, i) => <Blocks key={i} block={block} />);
+  return page.content?.root?.children && <Serialize nodes={page.content.root.children} />;
 }

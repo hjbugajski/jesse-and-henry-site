@@ -1,9 +1,30 @@
+import { HTMLProps, forwardRef } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
-export default function Icon({ name, className }: { name: string; className?: string }) {
+import { IconBorgoCorsignano } from './IconBorgoCorsignano';
+
+const customIcons: Record<string, any> = {
+  borgo_corsignano: IconBorgoCorsignano,
+};
+
+interface IconProps extends HTMLProps<HTMLElement> {
+  name: string;
+}
+
+const Icon = forwardRef<HTMLElement, IconProps>(({ className, name, ...props }, ref) => {
+  const CustomIcon = customIcons[name];
+
+  if (CustomIcon) {
+    return <CustomIcon ref={ref} className={cn(className)} {...props} />;
+  }
+
   return (
-    <i aria-hidden className={cn('material-symbols-rounded', className)}>
+    <i ref={ref} aria-hidden className={cn('material-symbols-rounded', className)} {...props}>
       {name}
     </i>
   );
-}
+});
+Icon.displayName = 'Icon';
+
+export { Icon };

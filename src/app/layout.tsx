@@ -50,7 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body className={cn(alice.variable, lato.variable)}>
         <Navigation {...navigation} />
-        <main className="flex flex-1 flex-col md:mt-16">{children}</main>
+        <main className="flex flex-1 flex-col md-lg:mt-16">{children}</main>
         <Footer />
         <Toaster />
       </body>
