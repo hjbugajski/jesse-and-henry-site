@@ -41,7 +41,7 @@ export default function Serialize({ nodes }: SerializeProps) {
   };
   const headingClasses = {
     h1: 'mb-6 mt-9 text-3xl',
-    h2: 'mb-4 mt-7 font-sans text-2xl font-bold normal-case tracking-normal',
+    h2: 'mb-4 mt-7 font-sans text-2xl font-bold normal-case tracking-normal w-full border-b-2 border-neutral-variant-50/50 pb-2',
     h3: 'mb-3 mt-6 font-sans text-xl font-bold normal-case tracking-normal',
   };
   const indentClasses = {
@@ -91,7 +91,7 @@ export default function Serialize({ nodes }: SerializeProps) {
               type: fields.linkType === 'custom' ? 'external' : 'internal',
               relationship: fields.doc,
               anchor: fields.anchor,
-              url: fields.url,
+              url: fields.tempUrl ?? fields.url,
               rel: fields.rel,
               newTab: fields.newTab,
             };
