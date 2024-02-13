@@ -8,18 +8,21 @@ import BlockSection from '@/components/blocks/Section';
 import {
   PayloadBlockAlert,
   PayloadBlockButtonLink,
+  PayloadBlockFaq,
   PayloadBlockGallery,
   PayloadBlockHero,
   PayloadBlockImageLink,
   PayloadBlockSection,
 } from '@/lib/types/payload';
 
+import BlockFaq from './Faq';
 import BlockImageLink from './ImageLink';
 import BlockRegistry from './Registry';
 
 const blocks = {
   alert: BlockAlert,
   buttonLink: BlockButtonLink,
+  faq: BlockFaq,
   gallery: BlockGallery,
   hero: BlockHero,
   imageLink: BlockImageLink,
@@ -33,6 +36,7 @@ export function Blocks({
 }:
   | PayloadBlockAlert
   | PayloadBlockButtonLink
+  | PayloadBlockFaq
   | PayloadBlockGallery
   | PayloadBlockHero
   | PayloadBlockImageLink
