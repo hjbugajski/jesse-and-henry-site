@@ -8,7 +8,7 @@ import { constructUrl } from '@/lib/utils/link';
 
 const MobileLinks = dynamic(() => import('./MobileLinks'));
 
-const DesktopLinks = ({ callToAction, links }: PayloadNavigation) => (
+const DesktopLinks = ({ callToAction, links, showCta }: PayloadNavigation) => (
   <>
     {links?.map((link, i) => (
       <li key={i} className="hidden md-lg:inline-block">
@@ -22,7 +22,7 @@ const DesktopLinks = ({ callToAction, links }: PayloadNavigation) => (
         </Link>
       </li>
     ))}
-    {callToAction && (
+    {showCta && callToAction && (
       <Button
         asChild
         color={callToAction.color}

@@ -51,6 +51,11 @@ export interface PayloadBlockButtonLink extends PayloadFieldLink {
   color: 'neutral' | 'neutral-variant' | 'primary' | 'secondary' | 'tertiary' | 'danger';
 }
 
+export interface PayloadBlockFaq {
+  blockType: 'faq';
+  faqs: PayloadFaq[];
+}
+
 export interface PayloadBlockGallery {
   blockType: 'gallery';
   images: PayloadMedia[];
@@ -92,6 +97,28 @@ export interface PayloadBlockSection {
 // [END] Payload Blocks
 
 // [START] Payload Collections
+export interface PayloadFaq {
+  id: string;
+  question: string;
+  answer?: {
+    root: {
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      type: string;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+
 export interface PayloadGuest {
   id: string;
   first?: string;
