@@ -28,5 +28,8 @@ export const GLOBALS = `#graphql
         color
       }
     }
+    Config {
+      rsvpDeadline
+    }
   }
 `;

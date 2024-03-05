@@ -235,6 +235,10 @@ export interface PayloadUser {
 // [END] Payload Collections
 
 // [START] Payload Globals
+export interface PayloadConfig {
+  rsvpDeadline: string;
+}
+
 export interface PayloadNavigation {
   links?: PayloadFieldLink[] | null;
   showCta?: boolean;

@@ -58,7 +58,13 @@ const formSchema = object({
   allergies: string().optional(),
 });
 
-export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest; open?: boolean }) {
+type RsvpFormProps = {
+  guest: PayloadGuest;
+  disabled?: boolean;
+  open?: boolean;
+};
+
+export default function RsvpForm({ guest, disabled = false, open = false }: RsvpFormProps) {
   const [attendingEvent, setAttendingEvent] = useState(false);
   const [formState, setFormState] = useState<ActionState>({ status: 'idle', message: null });
   const [collapsibleOpen, setCollapsibleOpen] = useState(open);
@@ -86,6 +92,10 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
   const watchRsvpPoolDay = form.watch('rsvpPoolDay') === 'accept';
 
   async function onSubmit(values: InferType<typeof formSchema>) {
+    if (disabled) {
+      return;
+    }
+
     setFormState({ status: 'pending', message: null });
 
     const cleanValues = Object.entries(values).reduce(
@@ -163,6 +173,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -209,6 +220,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -255,6 +267,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -301,6 +314,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -357,6 +371,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                             className="grid grid-cols-2 gap-2"
                             value={field.value}
                             onValueChange={field.onChange}
+                            disabled={disabled}
                           >
                             <Button
                               asChild
@@ -411,6 +426,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                             className="grid grid-cols-2 gap-2"
                             value={field.value}
                             onValueChange={field.onChange}
+                            disabled={disabled}
                           >
                             <Button
                               asChild
@@ -449,6 +465,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                   <FormField
                     control={form.control}
                     name="legalName"
+                    disabled={disabled}
                     render={({ field }) => (
                       <FormItem>
                         <div>
@@ -467,6 +484,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                   <FormField
                     control={form.control}
                     name="dateOfBirth"
+                    disabled={disabled}
                     render={({ field }) => (
                       <FormItem>
                         <div>
@@ -490,6 +508,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                   <FormField
                     control={form.control}
                     name="countryOfBirth"
+                    disabled={disabled}
                     render={({ field }) => (
                       <FormItem>
                         <div>
@@ -522,6 +541,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                             className="grid grid-cols-1 gap-2 xs:grid-cols-3"
                             value={field.value}
                             onValueChange={field.onChange}
+                            disabled={disabled}
                           >
                             <Button
                               asChild
@@ -589,6 +609,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                   <FormField
                     control={form.control}
                     name="allergies"
+                    disabled={disabled}
                     render={({ field }) => (
                       <FormItem>
                         <div>
@@ -605,7 +626,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                   />
                 </>
               )}
-              <Button type="submit" disabled={formState.status === 'pending'} size="lg" variant="solid">
+              <Button type="submit" disabled={formState.status === 'pending' || disabled} size="lg" variant="solid">
                 {formState.status === 'pending' ? <Spinner /> : 'Submit'}
               </Button>
             </form>

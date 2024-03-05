@@ -1,6 +1,6 @@
 import { GLOBALS } from '@/lib/graphql/gloabls';
 import { PAGES } from '@/lib/graphql/pages';
-import { PayloadNavigation } from '@/lib/types/payload';
+import { PayloadConfig, PayloadNavigation } from '@/lib/types/payload';
 
 const PAYLOAD_GRAPHQL = process.env.NEXT_PUBLIC_PAYLOAD_URL! + '/api/graphql';
 
@@ -8,13 +8,18 @@ const NEXT_CONFIG = {
   revalidate: 60,
 };
 
-export const fetchGlobals = async (): Promise<{ navigation: PayloadNavigation | undefined }> => {
+export const fetchGlobals = async (
+  cache: 'default' | 'no-cache' = 'default',
+): Promise<{
+  config: PayloadConfig | undefined;
+  navigation: PayloadNavigation | undefined;
+}> => {
   const { data, error } = await fetch(PAYLOAD_GRAPHQL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    next: NEXT_CONFIG,
+    ...(cache === 'no-cache' ? { cache: 'no-cache' } : { next: NEXT_CONFIG }),
     body: JSON.stringify({
       query: GLOBALS,
     }),
@@ -23,10 +28,10 @@ export const fetchGlobals = async (): Promise<{ navigation: PayloadNavigation | 
   if (error) {
     console.error(JSON.stringify(error));
 
-    return { navigation: undefined };
+    return { config: undefined, navigation: undefined };
   }
 
-  return { navigation: data.Navigation };
+  return { config: data.Config, navigation: data.Navigation };
 };
 
 export const fetchPages = async (): Promise<Array<{ slug: string }>> => {
