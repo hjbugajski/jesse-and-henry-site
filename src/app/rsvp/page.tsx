@@ -7,6 +7,7 @@ import RsvpForm from '@/components/RsvpForm';
 import { Alert, AlertBody, AlertTitle } from '@/lib/components/Alert';
 import { Button } from '@/lib/components/Button';
 import { Icon } from '@/lib/components/Icon';
+import { fetchGlobals } from '@/lib/graphql';
 import { pageTitle } from '@/lib/utils/page-title';
 
 export async function generateMetadata({ params: { slug } }: { params: { slug: string[] } }) {
@@ -19,7 +20,7 @@ export async function generateMetadata({ params: { slug } }: { params: { slug: s
 }
 
 export default async function Page() {
-  const [guest, guests] = await Promise.all([fetchGuest(), fetchGuests()]);
+  const [guest, guests, { config }] = await Promise.all([fetchGuest(), fetchGuests(), fetchGlobals('no-cache')]);
 
   if (!guest || !guest.user || !guests) {
     return (
@@ -39,6 +40,7 @@ export default async function Page() {
   }
 
   const { user } = guest;
+  const disableRsvp = config?.rsvpDeadline ? new Date(config.rsvpDeadline) < new Date() : false;
 
   return (
     <section className="mx-auto w-full max-w-lg py-12">
@@ -50,12 +52,16 @@ export default async function Page() {
       <p className="mb-2 text-sm">{guests.length === 1 ? 'RSVP below.' : 'RSVP below for each guest in your party.'}</p>
 
       <div className="my-6 flex flex-col gap-2">
-        <Alert color="tertiary" className="[&>i]:leading-5">
+        <Alert color={disableRsvp ? 'danger' : 'tertiary'} className="[&>i]:leading-5">
           <Icon name="label_important" />
           <AlertBody>
-            <p>
-              {guests.length === 1 ? 'RSVP' : 'RSVPs'} must be submitted by <strong>April 16, 2024</strong>.
-            </p>
+            {disableRsvp ? (
+              <p>The RSVP deadline has passed. You can no longer make changes.</p>
+            ) : (
+              <p>
+                {guests.length === 1 ? 'RSVP' : 'RSVPs'} must be submitted by <strong>April 16, 2024</strong>.
+              </p>
+            )}
           </AlertBody>
         </Alert>
         <Alert className="[&>i]:leading-5">
@@ -72,11 +78,11 @@ export default async function Page() {
         </Alert>
       </div>
 
-      <RsvpForm guest={user} open />
+      <RsvpForm guest={user} disabled={disableRsvp} open />
       {guests
         .filter((guest) => guest.id !== user.id)
         .map((guest, i) => (
-          <RsvpForm key={i} guest={guest} />
+          <RsvpForm key={i} guest={guest} disabled={disableRsvp} />
         ))}
 
       <div className="border-t-2 border-neutral-variant-50/50 pt-6">

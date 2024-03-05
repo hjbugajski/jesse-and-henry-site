@@ -32,6 +32,12 @@ const conditionalYesNoSchema = mixed<string>().when(rsvpArray, {
   otherwise: (schema) => schema.optional(),
 });
 
+const conditionalMealPreferenceSchema = mixed<string>().when(rsvpArray, {
+  is: conditionalRsvpIs,
+  then: (schema) => schema.oneOf(['beef', 'fish', 'vegetarian'], 'Selection is required').required('Required'),
+  otherwise: (schema) => schema.optional(),
+});
+
 const conditionalStringSchema = string().when(rsvpArray, {
   is: conditionalRsvpIs,
   then: (schema) => schema.required('Required'),
@@ -48,10 +54,17 @@ const formSchema = object({
   legalName: conditionalStringSchema,
   dateOfBirth: conditionalStringSchema,
   countryOfBirth: conditionalStringSchema,
+  mealPreference: conditionalMealPreferenceSchema,
   allergies: string().optional(),
 });
 
-export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest; open?: boolean }) {
+type RsvpFormProps = {
+  guest: PayloadGuest;
+  disabled?: boolean;
+  open?: boolean;
+};
+
+export default function RsvpForm({ guest, disabled = false, open = false }: RsvpFormProps) {
   const [attendingEvent, setAttendingEvent] = useState(false);
   const [formState, setFormState] = useState<ActionState>({ status: 'idle', message: null });
   const [collapsibleOpen, setCollapsibleOpen] = useState(open);
@@ -68,6 +81,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
       legalName: guest.legalName || '',
       dateOfBirth: guest.dateOfBirth || '',
       countryOfBirth: guest.countryOfBirth || '',
+      mealPreference: guest.mealPreference || '',
       allergies: guest.allergies || '',
     },
   });
@@ -78,6 +92,10 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
   const watchRsvpPoolDay = form.watch('rsvpPoolDay') === 'accept';
 
   async function onSubmit(values: InferType<typeof formSchema>) {
+    if (disabled) {
+      return;
+    }
+
     setFormState({ status: 'pending', message: null });
 
     const cleanValues = Object.entries(values).reduce(
@@ -155,6 +173,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -174,7 +193,10 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                           asChild
                           color={field.value === 'decline' ? 'danger' : 'neutral'}
                           size="lg"
-                          className={cn('w-full', field.value === 'decline' && 'bg-danger-90/50')}
+                          className={cn(
+                            'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                            field.value === 'decline' && 'bg-danger-90/50',
+                          )}
                         >
                           <RadioGroup.Item value="decline">
                             {field.value === 'decline' && <Icon name="cancel" />}
@@ -198,6 +220,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -217,7 +240,10 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                           asChild
                           color={field.value === 'decline' ? 'danger' : 'neutral'}
                           size="lg"
-                          className={cn('w-full', field.value === 'decline' && 'bg-danger-90/50')}
+                          className={cn(
+                            'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                            field.value === 'decline' && 'bg-danger-90/50',
+                          )}
                         >
                           <RadioGroup.Item value="decline">
                             {field.value === 'decline' && <Icon name="cancel" />}
@@ -241,6 +267,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -260,7 +287,10 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                           asChild
                           color={field.value === 'decline' ? 'danger' : 'neutral'}
                           size="lg"
-                          className={cn('w-full', field.value === 'decline' && 'bg-danger-90/50')}
+                          className={cn(
+                            'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                            field.value === 'decline' && 'bg-danger-90/50',
+                          )}
                         >
                           <RadioGroup.Item value="decline">
                             {field.value === 'decline' && <Icon name="cancel" />}
@@ -284,6 +314,7 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                         className="grid grid-cols-2 gap-2"
                         value={field.value}
                         onValueChange={field.onChange}
+                        disabled={disabled}
                       >
                         <Button
                           asChild
@@ -303,7 +334,10 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                           asChild
                           color={field.value === 'decline' ? 'danger' : 'neutral'}
                           size="lg"
-                          className={cn('w-full', field.value === 'decline' && 'bg-danger-90/50')}
+                          className={cn(
+                            'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                            field.value === 'decline' && 'bg-danger-90/50',
+                          )}
                         >
                           <RadioGroup.Item value="decline">
                             {field.value === 'decline' && <Icon name="cancel" />}
@@ -317,197 +351,282 @@ export default function RsvpForm({ guest, open = false }: { guest: PayloadGuest;
                 )}
               />
               {attendingEvent && (
-                <FormField
-                  control={form.control}
-                  name="transportationToVenue"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div>
-                        <FormLabel className="mb-1 block text-sm font-bold">
-                          Transportation to Borgo Corsignano &ndash; July 25
-                        </FormLabel>
-                        <FormLabel className="block">
-                          Please indicate if you will be using the provided transportation from Florence to Borgo
-                          Corsignano. Visit the guest information page for more details.
-                        </FormLabel>
-                      </div>
-                      <FormControl>
-                        <RadioGroup.Root
-                          className="grid grid-cols-2 gap-2"
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <Button
-                            asChild
-                            color={field.value === 'yes' ? 'secondary' : 'neutral'}
-                            size="lg"
-                            className={cn(
-                              'w-full text-sm [&>.material-symbols-rounded]:text-base',
-                              field.value === 'yes' && 'bg-secondary-90/50',
-                            )}
+                <>
+                  <FormField
+                    control={form.control}
+                    name="transportationToVenue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormLabel className="mb-1 block text-sm font-bold">
+                            Transportation to Borgo Corsignano &ndash; July 25
+                          </FormLabel>
+                          <FormLabel className="block">
+                            Please indicate if you will be using the provided transportation from Florence to Borgo
+                            Corsignano. Visit the guest information page for more details.
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <RadioGroup.Root
+                            className="grid grid-cols-2 gap-2"
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            disabled={disabled}
                           >
-                            <RadioGroup.Item value="yes">
-                              {field.value === 'yes' && <Icon name="check_circle" />}
-                              {field.value === 'yes' ? 'Yes' : 'Yes'}
-                            </RadioGroup.Item>
-                          </Button>
-                          <Button
-                            asChild
-                            color={field.value === 'no' ? 'danger' : 'neutral'}
-                            size="lg"
-                            className={cn('w-full', field.value === 'no' && 'bg-danger-90/50')}
+                            <Button
+                              asChild
+                              color={field.value === 'yes' ? 'secondary' : 'neutral'}
+                              size="lg"
+                              className={cn(
+                                'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                                field.value === 'yes' && 'bg-secondary-90/50',
+                              )}
+                            >
+                              <RadioGroup.Item value="yes">
+                                {field.value === 'yes' && <Icon name="check_circle" />}
+                                Yes
+                              </RadioGroup.Item>
+                            </Button>
+                            <Button
+                              asChild
+                              color={field.value === 'no' ? 'danger' : 'neutral'}
+                              size="lg"
+                              className={cn(
+                                'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                                field.value === 'no' && 'bg-danger-90/50',
+                              )}
+                            >
+                              <RadioGroup.Item value="no">
+                                {field.value === 'no' && <Icon name="cancel" />}
+                                No
+                              </RadioGroup.Item>
+                            </Button>
+                          </RadioGroup.Root>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="transportationFromVenue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormLabel className="mb-1 block text-sm font-bold">
+                            Transportation from Borgo Corsignano &ndash; July 28
+                          </FormLabel>
+                          <FormLabel className="block">
+                            Please indicate if you will be using the provided transportation from Borgo Corsignano to
+                            Florence. Visit the guest information page for more details.
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <RadioGroup.Root
+                            className="grid grid-cols-2 gap-2"
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            disabled={disabled}
                           >
-                            <RadioGroup.Item value="no">
-                              {field.value === 'no' && <Icon name="cancel" />}
-                              {field.value === 'no' ? 'No' : 'No'}
-                            </RadioGroup.Item>
-                          </Button>
-                        </RadioGroup.Root>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              {attendingEvent && (
-                <FormField
-                  control={form.control}
-                  name="transportationFromVenue"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div>
-                        <FormLabel className="mb-1 block text-sm font-bold">
-                          Transportation from Borgo Corsignano &ndash; July 28
-                        </FormLabel>
-                        <FormLabel className="block">
-                          Please indicate if you will be using the provided transportation from Borgo Corsignano to
-                          Florence. Visit the guest information page for more details.
-                        </FormLabel>
-                      </div>
-                      <FormControl>
-                        <RadioGroup.Root
-                          className="grid grid-cols-2 gap-2"
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <Button
-                            asChild
-                            color={field.value === 'yes' ? 'secondary' : 'neutral'}
-                            size="lg"
-                            className={cn(
-                              'w-full text-sm [&>.material-symbols-rounded]:text-base',
-                              field.value === 'yes' && 'bg-secondary-90/50',
-                            )}
+                            <Button
+                              asChild
+                              color={field.value === 'yes' ? 'secondary' : 'neutral'}
+                              size="lg"
+                              className={cn(
+                                'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                                field.value === 'yes' && 'bg-secondary-90/50',
+                              )}
+                            >
+                              <RadioGroup.Item value="yes">
+                                {field.value === 'yes' && <Icon name="check_circle" />}
+                                Yes
+                              </RadioGroup.Item>
+                            </Button>
+                            <Button
+                              asChild
+                              color={field.value === 'no' ? 'danger' : 'neutral'}
+                              size="lg"
+                              className={cn(
+                                'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                                field.value === 'no' && 'bg-danger-90/50',
+                              )}
+                            >
+                              <RadioGroup.Item value="no">
+                                {field.value === 'no' && <Icon name="cancel" />}
+                                No
+                              </RadioGroup.Item>
+                            </Button>
+                          </RadioGroup.Root>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="legalName"
+                    disabled={disabled}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormLabel className="mb-1 block text-sm font-bold">Full Legal Name</FormLabel>
+                          <FormLabel className="block">
+                            This is required to stay at Borgo Corsignano per Italian law.
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="dateOfBirth"
+                    disabled={disabled}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormLabel className="mb-1 block text-sm font-bold">Date of Birth</FormLabel>
+                          <FormLabel className="block">
+                            This is required to stay at Borgo Corsignano per Italian law.
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="date"
+                            max={new Date().toISOString().split('T')[0]}
+                            className="flex flex-row items-center"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="countryOfBirth"
+                    disabled={disabled}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormLabel className="mb-1 block text-sm font-bold">Country of Birth</FormLabel>
+                          <FormLabel className="block">
+                            This is required to stay at Borgo Corsignano per Italian law.
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="mealPreference"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormLabel className="mb-1 block text-sm font-bold">Meal Preference</FormLabel>
+                          <FormLabel className="block">
+                            Please indicate your meal preference for the wedding day. Your preference{' '}
+                            <strong>cannot be changed</strong> once RSVPs close.
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <RadioGroup.Root
+                            className="grid grid-cols-1 gap-2 xs:grid-cols-3"
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            disabled={disabled}
                           >
-                            <RadioGroup.Item value="yes">
-                              {field.value === 'yes' && <Icon name="check_circle" />}
-                              {field.value === 'yes' ? 'Yes' : 'Yes'}
-                            </RadioGroup.Item>
-                          </Button>
-                          <Button
-                            asChild
-                            color={field.value === 'no' ? 'danger' : 'neutral'}
-                            size="lg"
-                            className={cn('w-full', field.value === 'no' && 'bg-danger-90/50')}
-                          >
-                            <RadioGroup.Item value="no">
-                              {field.value === 'no' && <Icon name="cancel" />}
-                              {field.value === 'no' ? 'No' : 'No'}
-                            </RadioGroup.Item>
-                          </Button>
-                        </RadioGroup.Root>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                            <Button
+                              asChild
+                              color={field.value === 'beef' ? 'secondary' : 'neutral'}
+                              size="lg"
+                              className={cn(
+                                'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                                'justify-between xs:justify-center',
+                                field.value === 'beef' && 'bg-secondary-90/50',
+                              )}
+                            >
+                              <RadioGroup.Item value="beef">
+                                <Icon
+                                  name="check_circle"
+                                  className={cn(field.value === 'beef' ? 'visible block' : 'invisible xs:hidden')}
+                                />
+                                Steak
+                                <div aria-hidden className="size-4 xs:hidden" />
+                              </RadioGroup.Item>
+                            </Button>
+                            <Button
+                              asChild
+                              color={field.value === 'fish' ? 'secondary' : 'neutral'}
+                              size="lg"
+                              className={cn(
+                                'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                                'justify-between xs:justify-center',
+                                field.value === 'fish' && 'bg-secondary-90/50',
+                              )}
+                            >
+                              <RadioGroup.Item value="fish">
+                                <Icon
+                                  name="check_circle"
+                                  className={cn(field.value === 'fish' ? 'visible block' : 'invisible xs:hidden')}
+                                />
+                                Salmon
+                                <div aria-hidden className="size-4 xs:hidden" />
+                              </RadioGroup.Item>
+                            </Button>
+                            <Button
+                              asChild
+                              color={field.value === 'vegetarian' ? 'secondary' : 'neutral'}
+                              size="lg"
+                              className={cn(
+                                'w-full text-sm [&>.material-symbols-rounded]:text-base',
+                                'justify-between xs:justify-center',
+                                field.value === 'vegetarian' && 'bg-secondary-90/50',
+                              )}
+                            >
+                              <RadioGroup.Item value="vegetarian">
+                                <Icon
+                                  name="check_circle"
+                                  className={cn(field.value === 'vegetarian' ? 'visible block' : 'invisible xs:hidden')}
+                                />
+                                Vegetarian
+                                <div aria-hidden className="size-4 xs:hidden" />
+                              </RadioGroup.Item>
+                            </Button>
+                          </RadioGroup.Root>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="allergies"
+                    disabled={disabled}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormLabel className="block">
+                            <span className="text-sm font-bold">Allergies or Dietary Restrictions</span> (optional)
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <Textarea {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
               )}
-              {attendingEvent && (
-                <FormField
-                  control={form.control}
-                  name="legalName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div>
-                        <FormLabel className="mb-1 block text-sm font-bold">Full Legal Name</FormLabel>
-                        <FormLabel className="block">
-                          This is required to stay at Borgo Corsignano per Italian law.
-                        </FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              {attendingEvent && (
-                <FormField
-                  control={form.control}
-                  name="dateOfBirth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div>
-                        <FormLabel className="mb-1 block text-sm font-bold">Date of Birth</FormLabel>
-                        <FormLabel className="block">
-                          This is required to stay at Borgo Corsignano per Italian law.
-                        </FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="date"
-                          max={new Date().toISOString().split('T')[0]}
-                          className="flex flex-row items-center"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              {attendingEvent && (
-                <FormField
-                  control={form.control}
-                  name="countryOfBirth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div>
-                        <FormLabel className="mb-1 block text-sm font-bold">Country of Birth</FormLabel>
-                        <FormLabel className="block">
-                          This is required to stay at Borgo Corsignano per Italian law.
-                        </FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              {attendingEvent && (
-                <FormField
-                  control={form.control}
-                  name="allergies"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div>
-                        <FormLabel className="mb-1 block text-sm font-bold">
-                          Allergies or Dietary Restrictions{' '}
-                        </FormLabel>
-                        <FormLabel className="block">(optional)</FormLabel>
-                      </div>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              <Button type="submit" disabled={formState.status === 'pending'} size="lg" variant="solid">
+              <Button type="submit" disabled={formState.status === 'pending' || disabled} size="lg" variant="solid">
                 {formState.status === 'pending' ? <Spinner /> : 'Submit'}
               </Button>
             </form>

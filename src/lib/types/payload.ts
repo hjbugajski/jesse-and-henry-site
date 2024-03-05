@@ -132,6 +132,7 @@ export interface PayloadGuest {
   dateOfBirth?: string | null;
   countryOfBirth?: string | null;
   allergies?: string | null;
+  mealPreference?: ('beef' | 'fish' | 'vegetarian') | null;
   transportationToVenue?: ('yes' | 'no') | null;
   transportationFromVenue?: ('yes' | 'no') | null;
   updatedAt: string;
@@ -234,6 +235,10 @@ export interface PayloadUser {
 // [END] Payload Collections
 
 // [START] Payload Globals
+export interface PayloadConfig {
+  rsvpDeadline: string;
+}
+
 export interface PayloadNavigation {
   links?: PayloadFieldLink[] | null;
   showCta?: boolean;

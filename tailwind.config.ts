@@ -123,6 +123,7 @@ const config: Config = {
         widest: '0.25rem',
       },
       screens: {
+        xs: '425px',
         'md-lg': '992px',
       },
       keyframes: {
