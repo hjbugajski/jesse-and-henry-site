@@ -2,61 +2,55 @@
 
 import React, { useEffect, useState } from 'react';
 
+import { DateTime, Interval } from 'luxon';
+
 import { Icon } from '@/lib/components/Icon';
 
-const ZEROS = {
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
-};
+interface ConstructedInterval {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
 
 export default function Countdown() {
-  const [timeLeft, setTimeLeft] = useState<any>(constructTimeLeft(ZEROS));
-  const [allZeros, setAllZeros] = useState(false);
+  const [interval, setInterval] = useState<ConstructedInterval>(constructInterval());
 
-  function calculateTimeLeft() {
-    const difference = +new Date('2024-07-26T18:30:00.000+02:00') - +new Date();
-    let time: any = {};
+  const allZeros = isNaN(interval.days) && isNaN(interval.hours) && isNaN(interval.minutes) && isNaN(interval.seconds);
 
-    if (difference > 0) {
-      time = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    } else {
-      setAllZeros(true);
-      time = ZEROS;
-    }
+  function constructInterval(): ConstructedInterval {
+    const interval = Interval.fromDateTimes(
+      DateTime.now(),
+      DateTime.fromISO('2024-07-26T18:30:00.000+02:00'),
+    ).toDuration(['days', 'hours', 'minutes', 'seconds']);
 
-    return constructTimeLeft(time);
-  }
-
-  function constructTimeLeft(time: any) {
-    return Object.keys(time).map((interval, i) => (
-      <section key={i} className="flex flex-col items-center justify-center gap-1">
-        <p className="text-xl text-neutral-variant-30">{time[interval] ?? 0}</p>
-        <p className="text-xs text-neutral-variant-30/80">
-          {(time[interval] ?? 0) === 1 ? interval.slice(0, -1) : interval}
-        </p>
-      </section>
-    ));
+    return {
+      days: interval.days,
+      hours: interval.hours,
+      minutes: interval.minutes,
+      seconds: interval.seconds,
+    };
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    const timeout = setTimeout(() => setInterval(constructInterval()), 1000);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timeout);
   });
 
   return (
     <div className="flex flex-col items-center justify-center gap-2">
       <Icon name={allZeros ? 'hourglass_bottom' : 'hourglass_top'} className="text-3xl text-neutral-variant-30" />
-      <div className="grid grid-cols-4 items-center justify-center gap-4">{timeLeft}</div>
+      <dl className="grid grid-cols-4 items-center justify-center gap-4">
+        {Object.entries(interval).map(([key, value], i) => (
+          <div key={i} className="flex flex-col-reverse items-center justify-center gap-1">
+            <dt className="text-xs text-neutral-variant-30/80">{key}</dt>
+            <dd className="text-xl text-neutral-variant-30" suppressHydrationWarning>
+              {isNaN(value) ? 0 : value.toFixed()}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }

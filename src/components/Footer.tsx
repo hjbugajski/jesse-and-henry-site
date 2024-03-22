@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { Icon } from '@/lib/components/Icon';
 
-const Countdown = dynamic(() => import('@/components/Countdown'), { ssr: false });
+const Countdown = dynamic(() => import('@/components/Countdown'));
 
 export default function Footer() {
   return (
