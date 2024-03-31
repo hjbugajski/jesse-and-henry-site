@@ -55,12 +55,18 @@ export default async function Page() {
         <Alert color={disableRsvp ? 'danger' : 'tertiary'} className="[&>i]:leading-5">
           <Icon name="label_important" />
           <AlertBody>
-            {disableRsvp ? (
-              <p>The RSVP deadline has passed. You can no longer make changes.</p>
-            ) : (
-              <p>
-                {guests.length === 1 ? 'RSVP' : 'RSVPs'} must be submitted by <strong>April 16, 2024</strong>.
-              </p>
+            {disableRsvp && <p>The RSVP deadline has passed. You can no longer make changes.</p>}
+            {!disableRsvp && (
+              <>
+                <AlertTitle>
+                  {guests.length === 1 ? 'RSVP' : 'RSVPs'} must be submitted by <strong>April 16, 2024</strong>
+                </AlertTitle>
+                <p>
+                  If we have not received your response by this time, we will have to count you as declined. Our venue
+                  requires us to provide final guest counts and accommodation assignments a strict 3 months prior to our
+                  wedding. We apologize for any inconvenience this might cause.
+                </p>
+              </>
             )}
           </AlertBody>
         </Alert>
