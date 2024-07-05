@@ -4,6 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import Link from 'next/link';
 
 import { Button } from '@/lib/components/Button';
+import { DialogDescription, DialogTitle } from '@/lib/components/Dialog';
 import { Icon } from '@/lib/components/Icon';
 import { PayloadNavigation } from '@/lib/types/payload';
 import { constructUrl } from '@/lib/utils/link';
@@ -21,6 +22,8 @@ export default function MobileLinks({ links }: PayloadNavigation) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 backdrop-blur-sm" />
         <Dialog.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col items-end">
+          <DialogTitle className="hidden">Navigation</DialogTitle>
+          <DialogDescription className="hidden">Navigation Links</DialogDescription>
           <ul className="flex w-full flex-1 flex-col gap-1 bg-neutral-99/75 p-3 backdrop-blur-md">
             {links?.map((link, i) => (
               <li key={i} className="w-full">
