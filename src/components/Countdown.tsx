@@ -42,8 +42,8 @@ export default function Countdown() {
     <div className="flex flex-col items-center justify-center gap-2">
       <Icon name={allZeros ? 'hourglass_bottom' : 'hourglass_top'} className="text-3xl text-neutral-variant-30" />
       <dl className="grid grid-cols-4 items-center justify-center gap-4">
-        {Object.entries(interval).map(([key, value], i) => (
-          <div key={i} className="flex flex-col-reverse items-center justify-center gap-1">
+        {Object.entries(interval).map(([key, value]) => (
+          <div key={key} className="flex flex-col-reverse items-center justify-center gap-1">
             <dt className="text-xs text-neutral-variant-30/80">{key}</dt>
             <dd className="text-xl text-neutral-variant-30" suppressHydrationWarning>
               {isNaN(value) ? 0 : value.toFixed()}

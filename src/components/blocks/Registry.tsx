@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -122,28 +124,32 @@ export default function BlockRegistry() {
       name: 'Zelle',
       icon: IconZelle,
       dialogContent: DialogZelle,
+      id: randomUUID(),
     },
     {
       name: 'Venmo',
       icon: IconVenmo,
       dialogContent: DialogVenmo,
+      id: randomUUID(),
     },
     {
       name: 'PayPal',
       icon: IconPayPal,
       dialogContent: DialogPayPal,
+      id: randomUUID(),
     },
     {
       name: 'Check',
       icon: IconCheck,
       dialogContent: DialogCheck,
+      id: randomUUID(),
     },
   ];
 
   return (
     <ul className="my-6 grid grid-cols-2 gap-4 first:mt-0 last:mb-0 md:grid-cols-4">
-      {paymentMethods.map((method, i) => (
-        <li key={i}>
+      {paymentMethods.map((method) => (
+        <li key={method.name}>
           <Dialog>
             <DialogTrigger asChild>
               <Button className="flex h-auto w-full flex-col items-center justify-center gap-2 p-4">

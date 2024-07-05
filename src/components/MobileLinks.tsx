@@ -25,8 +25,8 @@ export default function MobileLinks({ links }: PayloadNavigation) {
           <DialogTitle className="hidden">Navigation</DialogTitle>
           <DialogDescription className="hidden">Navigation Links</DialogDescription>
           <ul className="flex w-full flex-1 flex-col gap-1 bg-neutral-99/75 p-3 backdrop-blur-md">
-            {links?.map((link, i) => (
-              <li key={i} className="w-full">
+            {links?.map((link) => (
+              <li id={link.id} key={link.id} className="w-full">
                 <Dialog.Close asChild>
                   <Link
                     href={constructUrl(link)}

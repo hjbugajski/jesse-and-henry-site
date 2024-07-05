@@ -87,8 +87,8 @@ export default async function Page() {
       <RsvpForm guest={user} disabled={disableRsvp} open />
       {guests
         .filter((guest) => guest.id !== user.id)
-        .map((guest, i) => (
-          <RsvpForm key={i} guest={guest} disabled={disableRsvp} />
+        .map((guest) => (
+          <RsvpForm key={guest.id} guest={guest} disabled={disableRsvp} />
         ))}
 
       <div className="border-t-2 border-neutral-variant-50/50 pt-6">

@@ -10,8 +10,8 @@ const MobileLinks = dynamic(() => import('./MobileLinks'));
 
 const DesktopLinks = ({ callToAction, links, showCta }: PayloadNavigation) => (
   <>
-    {links?.map((link, i) => (
-      <li key={i} className="hidden md-lg:inline-block">
+    {links?.map((link) => (
+      <li key={link.id} className="hidden md-lg:inline-block">
         <Link
           href={constructUrl(link)}
           target={link.newTab ? '_blank' : undefined}

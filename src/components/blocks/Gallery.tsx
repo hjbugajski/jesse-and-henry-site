@@ -5,8 +5,8 @@ import { PayloadBlockGallery } from '@/lib/types/payload';
 export default function BlockGallery({ images }: PayloadBlockGallery) {
   return (
     <ul className="grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {images.map((image, i) => (
-        <li key={i} className={image.width > image.height ? 'md:col-span-2' : ''}>
+      {images.map((image) => (
+        <li key={image.id} className={image.width > image.height ? 'md:col-span-2' : ''}>
           <Image
             src={image.url}
             width={image.width}
