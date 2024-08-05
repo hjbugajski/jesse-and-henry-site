@@ -1,8 +1,10 @@
+import { randomUUID } from 'crypto';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { Button } from '@/lib/components/Button';
-import { Dialog, DialogContent, DialogTrigger } from '@/lib/components/Dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/lib/components/Dialog';
 import { Icon } from '@/lib/components/Icon';
 
 const IconCheck = ({ className }: { className?: string }) => (
@@ -50,7 +52,7 @@ const DialogCheck = () => (
     <div className="flex flex-col gap-2">
       <div className="flex flex-row gap-2">
         <Icon name="person" className="shrink-0 text-xl leading-6" />
-        <p>Henry Bugajski</p>
+        <DialogDescription>Henry Bugajski</DialogDescription>
       </div>
       <div className="flex flex-row gap-2">
         <Icon name="home" className="shrink-0 text-xl leading-6" />
@@ -69,9 +71,9 @@ const DialogPayPal = () => (
     <div className="flex max-w-56 items-center justify-center rounded-xl bg-white p-2">
       <Image src="/images/paypal-qr.jpeg" width={524} height={524} alt="PayPal QR Code" />
     </div>
-    <p className="my-2">
+    <DialogDescription className="my-2">
       <strong>@hbugajski</strong>
-    </p>
+    </DialogDescription>
     <Button asChild iconPosition="right" variant="solid" className="mt-4 w-48">
       <Link href="https://paypal.me/hbugajski">
         Send
@@ -86,9 +88,9 @@ const DialogVenmo = () => (
     <div className="flex max-w-56 items-center justify-center rounded-xl bg-white p-2">
       <Image src="/images/venmo-qr.jpeg" width={575} height={575} alt="Venmo QR Code" />
     </div>
-    <p className="my-2">
+    <DialogDescription className="my-2">
       <strong>@henrybug</strong>
-    </p>
+    </DialogDescription>
     <Button asChild iconPosition="right" variant="solid" className="mt-4 w-48">
       <Link href="https://venmo.com/u/henrybug">
         Send
@@ -100,7 +102,9 @@ const DialogVenmo = () => (
 
 const DialogZelle = () => (
   <div className="flex flex-col items-center">
-    <p className="mb-4 text-balance text-center">Get started through your mobile banking app or with the Zelle app.</p>
+    <DialogDescription className="mb-4 text-balance text-center">
+      Get started through your mobile banking app or with the Zelle app.
+    </DialogDescription>
     <div className="flex flex-col gap-2">
       <div className="flex flex-row items-center gap-2">
         <Icon name="call" className="shrink-0 text-xl leading-6" />
@@ -120,28 +124,32 @@ export default function BlockRegistry() {
       name: 'Zelle',
       icon: IconZelle,
       dialogContent: DialogZelle,
+      id: randomUUID(),
     },
     {
       name: 'Venmo',
       icon: IconVenmo,
       dialogContent: DialogVenmo,
+      id: randomUUID(),
     },
     {
       name: 'PayPal',
       icon: IconPayPal,
       dialogContent: DialogPayPal,
+      id: randomUUID(),
     },
     {
       name: 'Check',
       icon: IconCheck,
       dialogContent: DialogCheck,
+      id: randomUUID(),
     },
   ];
 
   return (
     <ul className="my-6 grid grid-cols-2 gap-4 first:mt-0 last:mb-0 md:grid-cols-4">
-      {paymentMethods.map((method, i) => (
-        <li key={i}>
+      {paymentMethods.map((method) => (
+        <li key={method.name}>
           <Dialog>
             <DialogTrigger asChild>
               <Button className="flex h-auto w-full flex-col items-center justify-center gap-2 p-4">
@@ -150,13 +158,15 @@ export default function BlockRegistry() {
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <div>
+              <DialogTitle>
                 <div className="mb-4 flex h-auto w-full flex-col items-center justify-center gap-2">
                   <method.icon className="size-8" />
-                  <h1 className="font-sans text-lg font-bold normal-case tracking-normal">{method.name}</h1>
+                  <h1 id="dialog-title" className="font-sans text-lg font-bold normal-case tracking-normal">
+                    {method.name}
+                  </h1>
                 </div>
-                {method.dialogContent && <method.dialogContent />}
-              </div>
+              </DialogTitle>
+              {method.dialogContent && <method.dialogContent />}
             </DialogContent>
           </Dialog>
         </li>

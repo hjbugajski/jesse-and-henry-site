@@ -12,8 +12,8 @@ import Serialize from '../Serialize';
 export default function BlockFaq({ faqs }: PayloadBlockFaq) {
   return (
     <Accordion type={faqs.length === 1 ? 'single' : 'multiple'}>
-      {faqs.map(({ question, answer }, i) => (
-        <AccordionItem value={`faq-${i}`} key={i}>
+      {faqs.map(({ question, answer, id }) => (
+        <AccordionItem value={id} key={id}>
           <AccordionHeader asChild>
             <h2>
               <AccordionTrigger>{question}</AccordionTrigger>

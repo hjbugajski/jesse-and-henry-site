@@ -12,6 +12,7 @@ export const GLOBALS = `#graphql
         url
         rel
         newTab
+        id
       }
       showCta
       callToAction {

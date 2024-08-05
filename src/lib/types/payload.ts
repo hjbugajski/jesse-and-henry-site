@@ -18,6 +18,7 @@ export interface PayloadFieldLink {
   url?: string | null;
   rel?: 'noreferrer'[] | null;
   newTab?: boolean | null;
+  id: string;
 }
 // [END] Payload Fields
 

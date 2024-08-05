@@ -11,7 +11,7 @@ type ToasterToast = ToastProps & {
   description?: ReactNode;
 };
 
-const actionTypes = {
+export const actionTypes = {
   ADD_TOAST: 'ADD_TOAST',
   UPDATE_TOAST: 'UPDATE_TOAST',
   DISMISS_TOAST: 'DISMISS_TOAST',
@@ -149,7 +149,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
+      onOpenChange: (open: boolean) => {
         if (!open) dismiss();
       },
     },

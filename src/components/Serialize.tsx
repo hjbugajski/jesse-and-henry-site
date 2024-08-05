@@ -94,6 +94,7 @@ export default function Serialize({ nodes }: SerializeProps) {
               url: fields.tempUrl ?? fields.url,
               rel: fields.rel,
               newTab: fields.newTab,
+              id: fields.id,
             };
 
             return (
